@@ -7,4 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/register' , [AuthController::class , 'index']);
+Route::get('/register' , [AuthController::class , 'registerForm']);
+Route::get('/login' , [AuthController::class , 'loginForm']);
+

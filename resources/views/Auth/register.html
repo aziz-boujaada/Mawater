@@ -92,6 +92,7 @@
                     Register
                 </button>
             </form>
+          
         </div>
 
         <script>
@@ -143,9 +144,8 @@
 
                 const result = await response.json();
 
-                if (response.ok) {
-                    messageBox.innerText = result.message;
-                    messageBox.classList.add("text-green-600");
+                if (result.status == "success") {
+                     window.location.href = "/profile/user-profile.html"
                 } else {
                     messageBox.innerText =
                         result.message || "Registration failed";
