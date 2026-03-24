@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Login</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+            <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+
+            <form action="{{route('login.store')}}"  method="post" class="space-y-4">
+                @csrf 
+
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-indigo-400 outline-none"
+                />
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-indigo-400 outline-none"
+                />
+
+
+                <div id="message" class="text-center text-sm font-medium"></div>
+                <button
+                    type="submit"
+                    id="login_btn"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                >
+                    Login
+                </button>
+                  <div class="bg-red-100 text-red-700 p-3 rounded-lg">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            </form>
+        </div>
+
+        <script>
+            
+
+            const registerBtn = document
+                .getElementById("login_btn")
+                .addEventListener("click", CollectUserData);
+            function CollectUserData() {
+                const userData = {
+                    email: document.getElementById("email").value.trim(),
+                    password: document.getElementById("password").value.trim(),
+                };
+               
+                login(userData);
+              
+            }
+
+            // send data of user to login
+            async function login(userData) {
+                const response = await fetch(
+                    "http://127.0.0.1:8000/api/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                        },
+                        body: JSON.stringify(userData),
+                    },
+                );
+
+                const messageBox = document.getElementById("message");
+                messageBox.classList.remove("text-red-600", "text-green-600");
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    messageBox.innerText = result.message;
+                    messageBox.classList.add("text-green-600");
+                } else {
+                    messageBox.innerText =
+                        result.message || "Registration failed";
+                    messageBox.classList.add("text-red-600");
+                }
+            }
+        </script>
+    </body>
+</html>
