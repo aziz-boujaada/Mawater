@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MetersController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,6 +16,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard' , [AdminController::class , 'index'])->name('dashboard.admin');
+
+
+Route::get('/meter/create' , [MetersController::class , 'create'])->name('meter.create');
+Route::post('/meter/store' , [MetersController::class , 'store'])->name('meter.store');
+
+
 
 
 
