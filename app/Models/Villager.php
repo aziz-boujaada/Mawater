@@ -20,7 +20,7 @@ class Villager extends Model
     }
 
      public function meters():HasMany{
-        return $this->hasMany(User::class);
+        return $this->hasMany(Meter::class);
     }
 
 }
