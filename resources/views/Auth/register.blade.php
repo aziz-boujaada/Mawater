@@ -100,11 +100,26 @@
         function toggleVillagerFields() {
             const role = document.getElementById("role").value;
             const fields = document.getElementById("villagerFields");
+            const isVillager = role === "villager";
 
-            role === "villager" ?
-                fields.classList.remove("hidden") :
+            if (isVillager) {
+                fields.classList.remove("hidden");
+            } else {
                 fields.classList.add("hidden");
+            }
+
+            
+            const villagerInputs = document.querySelectorAll('#villagerFields input, #villagerFields select');
+            villagerInputs.forEach((el) => {
+                el.disabled = !isVillager;
+                if (!isVillager) {
+                    el.value = '';
+                }
+            });
         }
+
+      
+        document.addEventListener('DOMContentLoaded', toggleVillagerFields);
     </script>
 </body>
 
