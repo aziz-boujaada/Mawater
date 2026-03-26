@@ -65,7 +65,7 @@
 
         <form action="{{ route('reading.store') }}" method="post" class="space-y-5">
             @csrf
-
+             <!-- # region -->
             {{-- Villager --}}
             <div class="space-y-1.5">
                 <label class="block text-[0.72rem] font-semibold uppercase tracking-widest text-deep">Villager</label>
@@ -79,15 +79,7 @@
                 </select>
             </div>
 
-            {{-- previous readings --}}
-            <div class="space-y-1.5">
-                @foreach ($meter_reading as $meter )
-                <label for="previous_readings" class="block text-[0.72rem] font-semibold uppercase tracking-widest text-deep">previous reading</label>
-                <input type="number" id="previous_reading" value="{{ $meter->previous_reading }}" name="previous_reading" disabled
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none
-                focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-                @endforeach
-            </div>
+            
 
             {{-- current readings --}}
             <div class="space-y-1.5">

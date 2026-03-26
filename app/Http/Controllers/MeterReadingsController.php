@@ -19,11 +19,11 @@ class MeterReadingsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public static function create(Request $request)
     {
         $meter_of = Meter::with('villager')->get();
-        $selected_meter = MeterReadings::all();
-        return view('readings.create', compact('meter_of' , 'meter_reading'));
+         
+        return view('readings.create', compact('meter_of' , ));
     }
 
     /**
@@ -33,8 +33,7 @@ class MeterReadingsController extends Controller
     {
         try {
             $reading_data = $request->validated();
-            $reading = StoreReadingService::storeReading($reading_data);
-
+            $reading = StoreReadingService::storeReading($reading_data);            
             return redirect()->route('dashboard.admin')->with('success', "Reading created with success");
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
