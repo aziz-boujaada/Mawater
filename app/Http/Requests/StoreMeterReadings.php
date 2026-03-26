@@ -24,7 +24,6 @@ class StoreMeterReadings extends FormRequest
     {
         return [
             'meter_id' => 'required|integer|exists:meters,id',
-            'previous_reading' => 'required|numeric',
             'current_reading'  => 'required|numeric',
             'reading_date' => 'required|date'
         ];
