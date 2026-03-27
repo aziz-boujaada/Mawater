@@ -68,7 +68,7 @@
                            focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
                     <option value="" disabled selected>Select a villager…</option>
                     @foreach($villagers as $villager)
-                        <option value="{{ $villager->id }}">{{ $villager->name }}</option>
+                        <option value="{{ $villager->id }}">{{ $villager->user->name }}</option>
                     @endforeach
                 </select>
             </div>

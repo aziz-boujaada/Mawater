@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMeterRequest;
 use App\Models\Meter;
 use App\Models\User;
+use App\Models\Villager;
 use App\Services\StoreMeterService;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,7 @@ class MetersController extends Controller
      */
     public function create()
     {
-         $villagers = User::where('role' , 'villager')->get();
+         $villagers = Villager::all();
          return  view('meters.create' , compact('villagers'));
     }
 

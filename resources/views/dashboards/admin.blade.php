@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -42,76 +43,117 @@
 ════════════════════════════════ --}}
 <div class="flex min-h-screen">
 
-    {{-- ───────────── SIDEBAR ───────────── --}}
-    <aside id="sidebar"
-        class="fixed inset-y-0 left-0 z-40 w-64 bg-deep flex flex-col transition-transform duration-300 lg:translate-x-0 -translate-x-full">
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deep:  '#005461',
+                        teal:  '#0C7779',
+                        mid:   '#249E94',
+                        light: '#3BC1A8',
+                    },
+                    fontFamily: { dm: ['DM Sans', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Active left bar */
+        .nav-active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: #3BC1A8;
+            border-radius: 0 3px 3px 0;
+        }
+    </style>
+</head>
+<body class="font-dm bg-gray-100 flex">
 
-        {{-- Logo --}}
-        <div class="flex items-center gap-3 px-6 py-6 border-b border-white/10">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-mid to-light flex items-center justify-center shadow-lg shadow-light/20">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                    <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
-                    <line x1="12" y1="2" x2="12" y2="4"/>
-                </svg>
-            </div>
-            <span class="font-syne font-bold text-white text-lg tracking-tight">MeterPro</span>
+<aside id="sidebar"
+    class="fixed inset-y-0 left-0 z-40 w-56 bg-deep flex flex-col py-5">
+ 
+    {{-- Logo --}}
+    <div class="flex items-center gap-3 px-5 mb-6 shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-mid to-light flex items-center justify-center shadow-lg shadow-light/25 shrink-0">
+            <i class="fa-solid fa-gauge text-white text-sm"></i>
         </div>
-
-        {{-- Nav --}}
-        <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-
-            {{-- Active item --}}
-            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 text-white font-medium text-sm group">
-                <svg class="w-4.5 h-4.5 text-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                <span>Dashboard</span>
-                <span class="ml-auto w-1.5 h-1.5 rounded-full bg-light"></span>
-            </a>
-
-            <p class="px-4 pt-5 pb-1 text-[0.65rem] font-semibold uppercase tracking-widest text-white/30">Management</p>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/8 text-sm transition-colors group">
-                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span>Meters</span>
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/8 text-sm transition-colors group">
-                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <span>Villagers</span>
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/8 text-sm transition-colors group">
-                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                <span>Reports</span>
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/8 text-sm transition-colors group">
-                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                <span>Readings</span>
-            </a>
-
-            <p class="px-4 pt-5 pb-1 text-[0.65rem] font-semibold uppercase tracking-widest text-white/30">System</p>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/8 text-sm transition-colors">
-                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-                <span>Settings</span>
-            </a>
-        </nav>
-
-        {{-- User footer --}}
-        <div class="px-4 py-4 border-t border-white/10">
-            <div class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/8 transition cursor-pointer">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-mid to-light flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    AD
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-white text-xs font-semibold truncate">Admin</p>
-                    <p class="text-white/40 text-[0.7rem] truncate">admin@meterpro.com</p>
-                </div>
-                <svg class="w-4 h-4 text-white/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="font-bold text-white text-base tracking-tight">MeterPro</span>
+    </div>
+ 
+    <div class="mx-5 h-px bg-white/10 mb-4 shrink-0"></div>
+ 
+    {{-- Nav --}}
+    <nav class="flex-1 flex flex-col gap-0.5 px-3 overflow-y-auto">
+ 
+        <a href="#" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/12 text-white text-sm font-medium">
+            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-light rounded-r-full"></span>
+            <i class="fa-solid fa-table-cells-large text-light w-4 text-center shrink-0"></i>
+            Dashboard
+        </a>
+ 
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/8 text-sm transition-colors">
+            <i class="fa-solid fa-gauge text-center w-4 shrink-0"></i>
+            Meters
+        </a>
+ 
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/8 text-sm transition-colors">
+            <i class="fa-solid fa-users w-4 text-center shrink-0"></i>
+            Villagers
+        </a>
+ 
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/8 text-sm transition-colors">
+            <i class="fa-solid fa-file-lines w-4 text-center shrink-0"></i>
+            Reports
+        </a>
+ 
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/8 text-sm transition-colors">
+            <i class="fa-solid fa-wave-square w-4 text-center shrink-0"></i>
+            Readings
+        </a>
+ 
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/8 text-sm transition-colors">
+            <i class="fa-solid fa-gear w-4 text-center shrink-0"></i>
+            Settings
+        </a>
+ 
+    </nav>
+ 
+    {{-- Footer: user + logout --}}
+    <div class="mx-3 mt-4 shrink-0">
+        <div class="h-px bg-white/10 mb-3"></div>
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-mid to-light flex items-center justify-center text-white text-xs font-bold shrink-0">
+                AD
             </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-white text-xs font-semibold truncate">Admin</p>
+                <p class="text-white/40 text-[0.68rem] truncate">admin@meterpro.com</p>
+            </div>
+            <a href="{{ route('logout') ?? '#' }}"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+               class="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-white/8 transition-colors shrink-0"
+               title="Logout">
+                <i class="fa-solid fa-right-from-bracket text-sm"></i>
+            </a>
+            <form id="logout-form" action="{{ route('logout') ?? '#' }}" method="POST" class="hidden">@csrf</form>
         </div>
-    </aside>
+    </div>
+ 
+</aside>
 
     {{-- Sidebar overlay (mobile) --}}
     <div id="overlay" onclick="toggleSidebar()"
