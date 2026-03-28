@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreMeterReadings;
+use App\Models\Meter;
+use App\Models\MeterReadings;
+use App\Services\StoreReadingService;
+use Exception;
+use Illuminate\Http\Request;
+
+class MeterReadingsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index() {}
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public static function create(Request $request)
+    {
+        $meter_of = Meter::with('villager')->get();
+         
+        return view('readings.create', compact('meter_of' , ));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreMeterReadings $request)
+    {
+        try {
+            $reading_data = $request->validated();
+            $reading = StoreReadingService::storeReading($reading_data);            
+            return redirect()->route('dashboard.admin')->with('success', "Reading created with success");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(MeterReadings $meterReadings)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(MeterReadings $meterReadings)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, MeterReadings $meterReadings)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(MeterReadings $meterReadings)
+    {
+        //
+    }
+}

@@ -21,19 +21,20 @@ class StoreUserRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => ['required','string' , Password::min(8)->numbers()->letters()],
-            'role' => 'required|in:admin,collector,repair_agnet,villager',
-            'phone' => 'required|string|max:15',
-            'cin' => 'required_if:role,villager|string|max:20',
-            'subscription_status' => 'required_if:role,villager|in:subscribed,not_subscribed',
-            'address' => 'required_if:role,villager|string|max:255',
-        ];
-    }
+   public function rules(): array
+{
+    return [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => ['required','string','confirmed', Password::min(8)->numbers()->letters()],
+        'role' => 'required|in:admin,collector,repair_agent,villager',
+        'phone' => 'required|string|max:15',
+
+        'cin' => 'required_if:role,villager|string|max:20',
+        'subscription_status' => 'required_if:role,villager|in:subscribed,not_subscribed',
+        'address' => 'required_if:role,villager|string|max:255',
+    ];
+}
 
     public function messages(): array
     {
