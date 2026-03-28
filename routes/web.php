@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MeterReadingsController;
 use App\Http\Controllers\MetersController;
 use App\Models\MeterReadings;
@@ -26,6 +27,11 @@ Route::post('/meter/store' , [MetersController::class , 'store'])->name('meter.s
 
 Route::get('/reading/create' , [MeterReadingsController::class , 'create'])->name('reading.create');
 Route::post('/reading/store' , [MeterReadingsController::class , 'store'])->name('reading.store');
+
+Route::get('/invoices/create' , [InvoiceController::class , 'create'])->name('invoices.create');
+Route::post('/invoices/store' , [InvoiceController::class , 'store'])->name('invoices.store');
+
+
 
 
 
