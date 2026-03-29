@@ -23,7 +23,7 @@ class MeterReadingsController extends Controller
     {
         $meter_of = Meter::with('villager')->get();
          
-        return view('readings.create', compact('meter_of' , ));
+        return view('readings.create', compact('meter_of'));
     }
 
     /**
@@ -34,7 +34,7 @@ class MeterReadingsController extends Controller
         try {
             $reading_data = $request->validated();
             $reading = StoreReadingService::storeReading($reading_data);            
-            return redirect()->route('dashboard.admin')->with('success', "Reading created with success");
+            return redirect()->route('dashboard')->with('success', "Reading created with success");
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

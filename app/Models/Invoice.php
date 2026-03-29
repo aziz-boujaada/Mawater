@@ -16,7 +16,7 @@ class Invoice extends Model
 
    
 
-    public function readings(){
-        return $this->hasMany(MeterReadings::class , 'reading_id');
+    public function reading(){
+        return $this->belongsTo(MeterReadings::class , 'reading_id');
     }
 }

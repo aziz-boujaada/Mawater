@@ -65,21 +65,29 @@
 
         <form action="{{ route('reading.store') }}" method="post" class="space-y-5">
             @csrf
-             <!-- # region -->
+            <!-- # region -->
             {{-- Villager --}}
             <div class="space-y-1.5">
                 <label class="block text-[0.72rem] font-semibold uppercase tracking-widest text-deep">Villager</label>
                 <select name="meter_id"
                     class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none
-                           focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
+               focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
                     <option value="" disabled selected>Select a villager…</option>
-                    @foreach($meter_of as $meter)
-                    <option value="{{ $meter->id }}">{{ $meter->villager->user->name }} </option>
+
+                    @foreach($meter_of->groupBy(fn($meter) => $meter->villager->id) as $villagerId => $meters)
+                    <optgroup label="{{ $meters->first()->villager->user->name }}">
+                        @foreach($meters as $meter)
+                        <option value="{{ $meter->id }}">
+                            Meter: {{ mb_substr($meter->meter_reference, 0, 10) }}
+                        </option>
+                        @endforeach
+                    </optgroup>
                     @endforeach
+
                 </select>
             </div>
 
-            
+
 
             {{-- current readings --}}
             <div class="space-y-1.5">
