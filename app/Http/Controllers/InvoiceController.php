@@ -15,7 +15,9 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        
+        $invoices = Invoice::with('reading.meter.villager')->paginate(10);
+
+        return view('dashboards.invoices.index', compact('invoices'));
     }
 
     /**
@@ -23,8 +25,9 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $readings = MeterReadings::with('meter')->get();
-        return view('invoices.create' , compact('readings'));
+        $readings = MeterReadings::with('meter')->doesntHave('invoice')->get();
+       
+        return view('invoices.create', compact('readings'));
     }
 
     /**
@@ -33,18 +36,25 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request)
 
     {
-        $invoice_request = $request->validated();
-        $invoiceService = StoreInvoiceService::storeInvoice($invoice_request);
 
-         return redirect()->route('dashboard.admin')->with('success', "Reading created with success");
+        try {
+            $invoice_request = $request->validated();
+            StoreInvoiceService::storeInvoice($invoice_request);
+
+            return redirect()->route('invoices')->with('success', "Reading created with success");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Invoice $invoice)
+    public function show($id)
     {
-        //
+        $invoice = Invoice::with('reading.meter.villager')->where('id', $id)->first();
+
+        return view('dashboards.invoices.show', compact('invoice'));
     }
 
     /**

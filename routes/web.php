@@ -21,25 +21,30 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::middleware(['admin', 'auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
 
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
+
+    Route::get('/meters', [MetersController::class, 'index'])->name('meters');
     Route::get('/meter/create', [MetersController::class, 'create'])->name('meter.create');
     Route::post('/meter/store', [MetersController::class, 'store'])->name('meter.store');
 
+    Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
     Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
     Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
 
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
     Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
     Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
+    Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 });
 
 /// repair agent 
-Route::middleware(['auth' , 'collector'])->group(function () {
-    Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
-    Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
+// Route::middleware(['collector'])->group(function () {
+//     Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
+//     Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
 
-    Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
-    Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
-});
+//     Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+//     Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
+// });
