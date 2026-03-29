@@ -8,11 +8,17 @@ use App\Models\Villager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
+use Exception;
 class StoreInvoiceService
 {
 
-
+     
+    public static function isAlreadyHaveInvoice($reading_id){
+        $haveInvoice = Invoice::where('reading_id' , $reading_id)->exists();
+        if($haveInvoice){
+            throw new \Exception('thise reading already have an invoice ');
+        }
+    }
     public static function getBillingPeriod($reading_id) {
         $reading = MeterReadings::find($reading_id);
         if($reading){
@@ -53,7 +59,7 @@ class StoreInvoiceService
      
         DB::transaction(function() use($invoice_request){
         $reading_id = $invoice_request['reading_id'];
-
+        self::isAlreadyHaveInvoice($reading_id);
         $billing_period = self::getBillingPeriod($reading_id);
         $total_amount = self::calculateAmount($reading_id);
        
