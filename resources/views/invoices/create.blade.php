@@ -74,15 +74,19 @@
 
                     class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none
                            focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
-                    @foreach($readings->groupBy('meter.villager.user.name') as $name => $group)
+                    @forelse($readings->groupBy('meter.villager.user.name') as $name => $group)
                     <optgroup label="{{ $name }}">
-                        @foreach($group as $reading)
+                        @forelse($group as $reading)
                         <option value="{{ $reading->id }}">
-                            {{ $name}} - {{ \Carbon\Carbon::parse($reading->reading_date)->format('Y-M') }}
+                            {{ $name }} - {{ \Carbon\Carbon::parse($reading->reading_date)->format('Y-M') }}
                         </option>
-                        @endforeach
+                        @empty
+                        <option value="" disabled>there is no reading</option>
+                        @endforelse
                     </optgroup>
-                    @endforeach
+                    @empty
+                    <option value="" disabled>there is no reading at all</option>
+                    @endforelse
 
                 </select>
             </div>
@@ -93,17 +97,14 @@
                                active:translate-y-0 transition-all duration-150 tracking-wide">
                 Create New Reading →
             </button>
+            <a href="{{ route('dashboard') }}">
+            <button type="button"
+                class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 mt-2 rounded-xl
+                               shadow-lg shadow-light/30 hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105
+                               active:translate-y-0 transition-all duration-150 tracking-wide">
+                Go Back →
+            </button></a>
 
-            {{-- Errors --}}
-            @if ($errors->any())
-            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-                <ul class="space-y-1">
-                    @foreach ($errors->all() as $error)
-                    <li class="text-red-600 text-sm">— {{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
 
             @if(session('error'))
             <div class="mb-4 rounded-xl bg-red-50 border border-red-200 p-4 text-red-700">
