@@ -67,7 +67,7 @@ class AuthController extends Controller
             return redirect()->back()->withErrors(['email' => 'Invalid email or password']);
         }
 
-        return redirect()->route('dashboard.admin')->with('success', 'You are logged in successfully!');
+        return redirect()->route('dashboard')->with('success', 'You are logged in successfully!');
     }
 
     /**

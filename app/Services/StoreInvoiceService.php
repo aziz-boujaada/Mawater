@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Exception;
+use Illuminate\Support\Facades\Auth ;
+
 class StoreInvoiceService
 {
 
@@ -54,6 +56,13 @@ class StoreInvoiceService
          return $amount ; 
     }
 
+    public static function getCollectorId(){
+
+        $collector_id = Auth::id();
+        return $collector_id ; 
+
+    }
+
     public static function storeInvoice($invoice_request)
     {
      
@@ -62,13 +71,14 @@ class StoreInvoiceService
         self::isAlreadyHaveInvoice($reading_id);
         $billing_period = self::getBillingPeriod($reading_id);
         $total_amount = self::calculateAmount($reading_id);
-       
+        $collector_id = self::getCollectorId();
     
             $invoice = Invoice::create([
                 'reading_id' => $reading_id,
                 'invoice_reference' => 'INV-' . now()->format('Y-m-d') . '-' . Str::random(6),
                 'billing_period' => $billing_period , 
                 'total_amount' => $total_amount , 
+                'collector_id' => $collector_id
     
             ]);
     

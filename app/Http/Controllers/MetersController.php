@@ -37,7 +37,7 @@ class MetersController extends Controller
         $meterData = $request->validated();
         $meter = StoreMeterService::storeMeter($meterData);
 
-        return redirect()->route('dashboard.admin')->with('success' , "Meter with refernce {$meter->reference} created with success");
+        return redirect()->route('dashboard')->with('success' , "Meter with refernce {$meter->reference} created with success");
     }
 
     /**
