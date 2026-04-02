@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MeterReadingsController;
 use App\Http\Controllers\MetersController;
+use App\Http\Controllers\PaymentController;
 use App\Models\MeterReadings;
 use Illuminate\Support\Facades\Route;
 
@@ -41,10 +42,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 /// repair agent 
-// Route::middleware(['collector'])->group(function () {
-//     Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
-//     Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
+Route::middleware(['collector'])->group(function () {
+    Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
+    Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
 
-//     Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
-//     Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
-// });
+    Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+    Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
+
+    Route::get('payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('payments/store', [PaymentController::class, 'store'])->name('payments.store');
+});
