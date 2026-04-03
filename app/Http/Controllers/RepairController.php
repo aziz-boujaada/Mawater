@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreRepairRequest;
+use App\Models\Meter;
 use App\Models\Repair;
+use App\Services\StoreRepairService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RepairController extends Controller
 {
@@ -20,15 +24,18 @@ class RepairController extends Controller
      */
     public function create()
     {
-        //
+
+        $meters = Meter::with('villager')->get();
+        return view('repairs.create' , compact('meters'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRepairRequest $request)
     {
-        //
+        $repair_info = $request->validated();
+        StoreRepairService::storeRepair($repair_info);
     }
 
     /**

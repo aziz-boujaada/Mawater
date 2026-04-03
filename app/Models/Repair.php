@@ -14,6 +14,7 @@ protected $fillable = [
     'problem_description',
     'repair_cost' ,
     'repair_date' ,
+    'status'
 ];
 
   public function meter():BelongsTo{
