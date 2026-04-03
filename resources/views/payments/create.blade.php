@@ -152,26 +152,42 @@
 
                             {{-- Payment button --}}
                             <div class="px-5 py-4 bg-gray-50/50 border-t border-gray-100">
-                                <form action="{{ route('payments.store') }}" method="POST" class="payment-form">
-                                    @csrf
-                                    <input type="hidden" name="invoice_id" value="{{ $invoice->id }}">
+                               <form action="{{ route('payments.store') }}" method="POST" class="payment-form">
+    @csrf
+    <input type="hidden" name="invoice_id" value="{{ $invoice->id }}">
 
-                                    <select name="status" onchange="toggleStatusPaidFields(this)">
-                                        <option value="paid">Paid</option>
-                                        <option value="partial">Partial</option>
-                                    </select>
+    @if ($invoice->total_amount > 0)
+        {{-- Status Badge --}}
+        <p class="mb-2 font-bold text-sm text-white px-3 py-1 rounded-xl bg-gradient-to-r from-teal to-light w-max">
+            Status: {{ ucfirst($invoice->status) }}
+        </p>
 
-                                    <div class="partialFields space-y-4 hidden">
-                                        <input type="number" name="amount_paid" placeholder="amount to pay EX:10DH"
-                                            class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3" />
-                                    </div>
+        {{-- Status Select --}}
+        <select name="status" onchange="toggleStatusPaidFields(this)"
+            class="w-full mb-3 bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3">
+            <option value="paid" {{ $invoice->status == 'paid' ? 'selected' : '' }}>Paid</option>
+            <option value="partial" {{ $invoice->status == 'partial' ? 'selected' : '' }}>Partial</option>
+        </select>
 
-                                    <button type="submit"
-                                        class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal to-light text-white font-bold text-sm py-2.5 rounded-xl">
-                                        Mark as Paid
-                                    </button>
-                                </form>
-                            </div>
+        {{-- Partial amount input --}}
+        <div class="partialFields space-y-4 {{ $invoice->status == 'partial' ? '' : 'hidden' }}">
+            <input type="number" name="amount_paid" placeholder="Amount to pay EX: 10DH"
+                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3" />
+        </div>
+
+        {{-- Submit button --}}
+        <button type="submit"
+            class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal to-light text-white font-bold text-sm py-2.5 rounded-xl">
+            Mark as Paid
+        </button>
+    @else
+        {{-- Already Paid --}}
+        <p class="w-full flex items-center justify-center gap-2 bg-gray-400 text-white font-bold text-sm py-2.5 rounded-xl">
+            Paid
+        </p>
+    @endif
+</form>
+      </div>
 
                         </div>
 

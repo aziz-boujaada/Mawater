@@ -46,6 +46,14 @@ class StorePaymentService
 
         return $remaining_amount;
     }
+
+    public static function upadtedInvoceAmountAfterPay($remaining_amount ,$invoice_id)
+    {
+        $invoice = Invoice::find($invoice_id);
+        $invoice->update([
+            'total_amount' => $remaining_amount,
+        ]);
+    }
     public static function storePayment($payment_data)
     {
 
@@ -59,11 +67,11 @@ class StorePaymentService
             'status' => $payment_data['status'],
             'amount_paid' => $amount_paid,
             'payment_date' => now(),
-            
+
         ]);
 
         $payment->update(['remaining_amount' => $remaining_amount,]);
-
+        self::upadtedInvoceAmountAfterPay($remaining_amount , $payment_data['invoice_id']);
         return $payment;
     }
 }
