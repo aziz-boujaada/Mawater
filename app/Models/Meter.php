@@ -23,4 +23,9 @@ class Meter extends Model
     {
         return $this->hasMany(MeterReadings::class, 'meter_id');
     }
+
+    public function repairs():HasMany{
+        return $this->hasMany(Repair::class , 'meter_id');
+    }
 }
+

@@ -6,6 +6,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -55,6 +56,14 @@ class User extends Authenticatable
 
     public function villager():HasOne{
         return $this->hasOne(Villager::class , 'user_id' );
+    }
+
+    public function invoices():HasMany{
+        return $this->hasMany(Invoice::class , 'collector_id');
+    }
+
+    public function repairs():hasMany{
+        return $this->hasMany(Repair::class , 'repair_agent_id');
     }
 }
 

@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => AuthMiddleware::class,
             'admin' => AdminMiddleware::class,
-            'reapair_agent' => RepairAgentMiddleware::class,
+            'repair_agent' => RepairAgentMiddleware::class,
             'collector' => CollectorMiddleware::class,
             'villager' => VillagerMiddleware::class,
 

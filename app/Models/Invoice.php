@@ -12,11 +12,16 @@ class Invoice extends Model
         'reading_id',
         'billing_period',
         'total_amount', 
+        'collector_id'
     ];
 
    
 
     public function reading(){
         return $this->belongsTo(MeterReadings::class , 'reading_id');
+    }
+
+    public function collector() :BelongsTo{
+        return $this->belongsTo(User::class , 'collector_id');
     }
 }
