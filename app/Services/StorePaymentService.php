@@ -39,9 +39,6 @@ class StorePaymentService
             throw new \Exception('the amount paid is grater than invoice total ');
         }
 
-        if ($amount_paid < 0) {
-            throw new \Exception('amount must be positiv price');
-        }
         $remaining_amount = $total_amount - $amount_paid;
 
         return $remaining_amount;
