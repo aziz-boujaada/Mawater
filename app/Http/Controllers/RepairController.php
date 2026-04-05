@@ -32,10 +32,10 @@ class RepairController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRepairRequest $request)
+    public function store(StoreRepairRequest $request , StoreRepairService $storeRepairService)
     {
         $repair_info = $request->validated();
-        StoreRepairService::storeRepair($repair_info);
+        $storeRepairService->storeRepair($repair_info);
     }
 
     /**

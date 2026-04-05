@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Repair extends Model
 {
@@ -23,5 +24,9 @@ protected $fillable = [
 
   public function repair_agent():BelongsTo{
     return $this->belongsTo(User::class , 'repair_agent_id');
+  }
+
+  public function loses():HasMany{
+    return $this->hasMany(FinancialLose::class , 'repair_id');
   }
 }
