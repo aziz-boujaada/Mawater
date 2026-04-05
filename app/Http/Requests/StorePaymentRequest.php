@@ -24,7 +24,7 @@ class StorePaymentRequest extends FormRequest
     {
         return [
             'invoice_id'   => 'required|integer|exists:invoices,id',
-            'amount_paid'  => 'required|numeric|min:0',
+            'amount_paid'  => 'required_if:status,partial|numeric|min:0',
             'status'       => 'required|in:paid,partial',
         ];
     }
