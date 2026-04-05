@@ -48,10 +48,27 @@
                     <i class="fa-solid fa-arrow-left text-xs"></i>
                     Back
                 </a>
+
+                <a href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    class="flex items-center gap-2 text-sm text-red-400 hover:text-red-800 border border-gray-200 hover:border-red-500 px-4 py-2 rounded-xl transition-colors"
+                    title="Logout">
+                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                    Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
             </header>
+
+
 
             {{-- CONTENT --}}
             <main class="flex-1 p-6 space-y-10">
+                @if(session('error'))
+                <div class=" resposns_message absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-red-50 border border-red-200 p-4 rounded-xl text-red-700 shadow-lg">
+                    - {{ session('error') }}
+                </div>
+                @endif
+
 
                 @foreach ($collectors as $collector)
 
@@ -152,41 +169,42 @@
 
                             {{-- Payment button --}}
                             <div class="px-5 py-4 bg-gray-50/50 border-t border-gray-100">
-                               <form action="{{ route('payments.store') }}" method="POST" class="payment-form">
-    @csrf
-    <input type="hidden" name="invoice_id" value="{{ $invoice->id }}">
+                                <form action="{{ route('payments.store') }}" method="POST" class="payment-form">
+                                    @csrf
+                                    <input type="hidden" name="invoice_id" value="{{ $invoice->id }}">
 
-    @if ($invoice->total_amount > 0)
-        {{-- Status Badge --}}
-        <p class="mb-2 font-bold text-sm text-white px-3 py-1 rounded-xl bg-gradient-to-r from-teal to-light w-max">
-            Status: {{ ucfirst($invoice->status) }}
-        </p>
+                                    @if ($invoice->total_amount > 0)
+                                    {{-- Status Badge --}}
+                                    <p class="mb-2 font-bold text-sm text-white px-3 py-1 rounded-xl bg-gradient-to-r from-teal to-light w-max">
+                                        Status: {{ ucfirst($invoice->status) }}
+                                    </p>
 
-        {{-- Status Select --}}
-        <select name="status" onchange="toggleStatusPaidFields(this)"
-            class="w-full mb-3 bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3">
-            <option value="paid" {{ $invoice->status == 'paid' ? 'selected' : '' }}>Paid</option>
-            <option value="partial" {{ $invoice->status == 'partial' ? 'selected' : '' }}>Partial</option>
-        </select>
+                                    {{-- Status Select --}}
+                                    <select name="status" onchange="toggleStatusPaidFields(this)"
+                                        class="w-full mb-3 bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3">
+                                        <option value="paid" {{ $invoice->status == 'paid' ? 'selected' : '' }}>Paid</option>
+                                        <option value="partial" {{ $invoice->status == 'partial' ? 'selected' : '' }}>Partial</option>
+                                    </select>
 
-        {{-- Partial amount input --}}
-        <div class="partialFields space-y-4 {{ $invoice->status == 'partial' ? '' : 'hidden' }}">
-            <input type="number" name="amount_paid" placeholder="Amount to pay EX: 10DH"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3" />
-        </div>
+                                    {{-- Partial amount input --}}
+                                    <div class="partialFields space-y-4 {{ $invoice->status == 'partial' ? '' : 'hidden' }}">
+                                        <input type="number" name="amount_paid" placeholder="Amount to pay EX: 10DH"
+                                            class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3" />
+                                    </div>
 
-        {{-- Submit button --}}
-        <button type="submit"
-            class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal to-light text-white font-bold text-sm py-2.5 rounded-xl">
-            Mark as Paid
-        </button>
-    @else
-        {{-- Already Paid --}}
-        <p class="w-full flex items-center justify-center gap-2 bg-gray-400 text-white font-bold text-sm py-2.5 rounded-xl">
-            Paid
-        </p>
-    @endif
-</form>
+                                    {{-- Submit button --}}
+                                    <button type="submit"
+                                        class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal to-light text-white font-bold text-sm py-2.5 rounded-xl">
+                                        Mark as Paid
+                                    </button>
+
+                                    @else
+                                    {{-- Already Paid --}}
+                                    <p class="w-full flex items-center justify-center gap-2 bg-gray-400 text-white font-bold text-sm py-2.5 rounded-xl">
+                                        Payed
+                                    </p>
+                                    @endif
+                                </form>
                             </div>
 
                         </div>
@@ -219,9 +237,19 @@
             }
         }
 
+        const hideresponsMessage = () => {
+            const respons_msg = document.querySelector('.resposns_message')
+            if (respons_msg) {
+                setTimeout(() => {
+                    respons_msg.classList.add('hidden');
+                }, 5000);
+            }
+
+        }
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('select[name="status"]').forEach(select => {
                 toggleStatusPaidFields(select);
+                hideresponsMessage()
             });
         });
     </script>
