@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_reference');
-            $table->foreignId('meter_id')->nullable()->constrained('meters')->nullOnDelete();
+            $table->foreignId('reading_id')->nullable()->constrained('meter_readings')->nullOnDelete();
             $table->date('billing_period');
             $table->decimal('total_amount', 10, 2);
             $table->enum('status', ['paid', 'partial', 'unpaid']);

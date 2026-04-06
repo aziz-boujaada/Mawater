@@ -27,7 +27,7 @@ class StoreReadingService
    {
       $consumption = 0;
 
-      if ($previous_reading > $reading_data['current_reading']) {
+      if ($previous_reading > $reading_data['current_reading'] || $previous_reading == $reading_data['current_reading']) {
          throw new \Exception('cuerrnt reading must be grater than previous reading ');
       } else {
          $consumption = $reading_data['current_reading'] - $previous_reading;

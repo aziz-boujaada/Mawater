@@ -8,13 +8,22 @@ use App\Models\MeterReadings;
 use App\Services\StoreReadingService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MeterReadingsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+
+
+
+    public function index()
+    {
+        $readings = MeterReadings::with('meter.villager.user')->paginate(10);
+        return view('dashboards.readings.index', compact('readings'));
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -22,8 +31,8 @@ class MeterReadingsController extends Controller
     public static function create(Request $request)
     {
         $meter_of = Meter::with('villager')->get();
-         
-        return view('readings.create', compact('meter_of'));
+
+        return view('dashboards.readings.create', compact('meter_of'));
     }
 
     /**
@@ -31,10 +40,17 @@ class MeterReadingsController extends Controller
      */
     public function store(StoreMeterReadings $request)
     {
+
+        $user_role = Auth::user()->role;
         try {
             $reading_data = $request->validated();
-            $reading = StoreReadingService::storeReading($reading_data);            
-            return redirect()->route('dashboard')->with('success', "Reading created with success");
+            StoreReadingService::storeReading($reading_data);
+            if ($user_role == 'collector') {
+                return redirect()->route('dashboard.collector')->with('success', "Reading created with success");
+            }
+
+            return redirect()->route('dashboard.admin')->with('success', "Reading created with success");
+            
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
