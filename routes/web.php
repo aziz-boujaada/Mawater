@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardsController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MeterReadingsController;
 use App\Http\Controllers\MetersController;
@@ -26,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['admin'])->group(function () {
 
-        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/admin', [DashboardsController::class, 'admin'])->name('dashboard.admin');
 
         Route::get('/meters', [MetersController::class, 'index'])->name('meters');
         Route::get('/meter/create', [MetersController::class, 'create'])->name('meter.create');
@@ -44,12 +45,20 @@ Route::middleware(['auth'])->group(function () {
 
     /// collector
     Route::middleware(['collector'])->group(function () {
+        Route::get('/dashboard/collector', [DashboardsController::class, 'collector'])->name('dashboard.collector');
+
+        Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
         Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
         Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
+        Route::get('/reading/show/{id}', [InvoiceController::class, 'show'])->name('reading.show');
 
+
+        Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
         Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
         Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
+        Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 
+        Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
         Route::get('payments/create', [PaymentController::class, 'create'])->name('payments.create');
         Route::post('payments/store', [PaymentController::class, 'store'])->name('payments.store');
     });
@@ -60,4 +69,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('repairs/create', [RepairController::class, 'create'])->name('repairs.create');
         Route::post('repairs/store', [RepairController::class, 'store'])->name('repairs.store');
     });
-    });
+});
