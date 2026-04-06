@@ -41,8 +41,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 
-<body class="font-dm bg-deep min-h-screen flex items-center justify-center px-4 py-10">
-
+<body class="font-dm bg-white min-h-screen flex items-center justify-center px-4 py-10">
+       @include('components.side-bar' , ['active' => 'invoices'])
     <div class="animate-slideUp bg-white rounded-3xl p-10 w-full max-w-md shadow-2xl relative overflow-hidden">
 
         {{-- Top accent bar --}}
@@ -95,22 +95,26 @@
                 class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 rounded-xl
                                shadow-lg shadow-light/30 hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105
                                active:translate-y-0 transition-all duration-150 tracking-wide">
-                Create New Reading →
+                Create New Invoice →
             </button>
-            <a href="{{ route('dashboard') }}">
-            <button type="button"
-                class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 mt-2 rounded-xl
+            @if (Auth::user()->role == 'collector')
+                  <a href="{{ route('dashboard.collector') }}">
+            @elseif(Auth::user()->role == 'admin')
+                <a href="{{ route('dashboard.collector') }}">
+            @endif
+                    <button type="button"
+                        class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 mt-2 rounded-xl
                                shadow-lg shadow-light/30 hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105
                                active:translate-y-0 transition-all duration-150 tracking-wide">
-                Go Back →
-            </button></a>
+                        Go Back →
+                    </button></a>
 
 
-            @if(session('error'))
-            <div class="mb-4 rounded-xl bg-red-50 border border-red-200 p-4 text-red-700">
-                _ {{ session('error') }}
-            </div>
-            @endif
+                @if(session('error'))
+                <div class="mb-4 rounded-xl bg-red-50 border border-red-200 p-4 text-red-700">
+                    _ {{ session('error') }}
+                </div>
+                @endif
     </div>
 
 

@@ -8,7 +8,7 @@ use App\Models\Payment;
 use App\Models\User;
 use App\Services\StorePaymentService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth ;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -17,7 +17,8 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        $payments = Payment::with('invoice.collector')->paginate(10);
+        return view('dashboards.payments.index', compact('payments'));
     }
 
     /**
@@ -26,15 +27,15 @@ class PaymentController extends Controller
     public function create()
 
     {
-        $user = Auth::user() ; 
-        if($user->role == 'admin'){
-            $collectors = User::with('invoices')->whereIn('role' , ['collector' ,'admin'])->get() ; 
-
-        }elseif($user->role == 'collector'){
-            $collectors = User::with('invoices')->where('id' , $user->id)->get();
+        $user = Auth::user();
+        if ($user->role == 'admin') {
+            $collectors = User::with('invoices.payments')->whereIn('role', ['collector', 'admin'])->get();
+        } elseif ($user->role == 'collector') {
+            $collectors = User::with('invoices.payments')->where('id', $user->id)->get();
         }
-        return view('payments.create' , compact('collectors')) ;
 
+
+        return view('dashboards.payments.create', compact('collectors'));
     }
 
     /**
@@ -42,8 +43,14 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request)
     {
-        $payment_data = $request->validated();
-        StorePaymentService::storePayment($payment_data);
+        try {
+            $payment_data = $request->validated();
+            StorePaymentService::storePayment($payment_data);
+
+            return redirect()->back()->with('success', 'payments done ');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**

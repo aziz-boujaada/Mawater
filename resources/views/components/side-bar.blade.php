@@ -34,7 +34,7 @@
 --}}
 
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-56 bg-deep flex flex-col py-5 transition-transform duration-300"
-       :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
 
     {{-- Logo --}}
     <div class="flex items-center gap-3 px-5 mb-6 shrink-0">
@@ -50,30 +50,33 @@
     <nav class="flex-1 flex flex-col gap-0.5 px-3 overflow-y-auto">
 
         @php
-            $links = [
-                ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => 'dashboard'],
-                ['key' => 'meters',    'label' => 'Meters',    'icon' => 'fa-gauge',              'route' => 'meters'],
-                ['key' => 'readings',  'label' => 'Readings',  'icon' => 'fa-wave-square',        'route' => 'readings'],
-                ['key' => 'invoices',  'label' => 'Invoices',  'icon' => 'fa-receipt',            'route' => 'invoices'],
-                // ['key' => 'reports',   'label' => 'Reports',   'icon' => 'fa-file-lines',         'route' => 'reports'],
-                // ['key' => 'villagers', 'label' => 'Villagers', 'icon' => 'fa-users',              'route' => 'villagers'],
-                // ['key' => 'settings',  'label' => 'Settings',  'icon' => 'fa-gear',               'route' => 'settingss'],
-            ];
+        $dashboardRoute = auth()->user()->role === 'admin'
+        ? 'dashboard.admin'
+        : 'dashboard.collector';
+
+        $links = [
+        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
+        ['key' => 'meters', 'label' => 'Meters', 'icon' => 'fa-gauge', 'route' => 'meters'],
+        ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
+        ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],
+        ['key' => 'payments', 'label' => 'payments', 'icon' => 'fa-receipt', 'route' => 'payments'],
+
+        ];
         @endphp
 
         @foreach($links as $link)
-            @php $isActive = ($active ?? '') === $link['key']; @endphp
-            <a href="{{ route($link['route']) }}"
-               class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors
+        @php $isActive = ($active ?? '') === $link['key']; @endphp
+        <a href="{{ route($link['route']) }}"
+            class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors
                       {{ $isActive
                           ? 'bg-white/12 text-white font-medium'
                           : 'text-white/50 hover:text-white hover:bg-white/8' }}">
-                @if($isActive)
-                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-light rounded-r-full"></span>
-                @endif
-                <i class="fa-solid {{ $link['icon'] }} w-4 text-center shrink-0 {{ $isActive ? 'text-light' : '' }}"></i>
-                {{ $link['label'] }}
-            </a>
+            @if($isActive)
+            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-light rounded-r-full"></span>
+            @endif
+            <i class="fa-solid {{ $link['icon'] }} w-4 text-center shrink-0 {{ $isActive ? 'text-light' : '' }}"></i>
+            {{ $link['label'] }}
+        </a>
         @endforeach
 
     </nav>
@@ -90,9 +93,9 @@
                 <p class="text-white/40 text-[0.68rem] truncate">{{ auth()->user()->email ?? 'admin@meterpro.com' }}</p>
             </div>
             <a href="{{ route('logout') }}"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-               class="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-white/8 transition-colors shrink-0"
-               title="Logout">
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-white/8 transition-colors shrink-0"
+                title="Logout">
                 <i class="fa-solid fa-right-from-bracket text-sm"></i>
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
@@ -103,6 +106,7 @@
 
 {{-- Mobile overlay --}}
 <div id="sidebar-overlay"
-     class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"
-     onclick="toggleSidebar()"></div>
+    class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"
+    onclick="toggleSidebar()"></div>
+
 </html>

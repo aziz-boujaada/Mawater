@@ -40,8 +40,9 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
+@include('components.side-bar' , ['active' => 'readings'])
 
-<body class="font-dm bg-deep min-h-screen flex items-center justify-center px-4 py-10">
+<body class="font-dm bg-white min-h-screen flex items-center justify-center px-4 py-10">
 
     <div class="animate-slideUp bg-white rounded-3xl p-10 w-full max-w-md shadow-2xl relative overflow-hidden">
 
@@ -60,7 +61,7 @@
         </div>
 
         {{-- Heading --}}
-        <h2 class="font-syne font-extrabold text-2xl text-deep text-center tracking-tight mb-1">Create Meter</h2>
+        <h2 class="font-syne font-extrabold text-2xl text-deep text-center tracking-tight mb-1">Create Reading</h2>
         <p class="text-center text-sm text-teal/60 mb-7">Register a new Reading to the system</p>
 
         <form action="{{ route('reading.store') }}" method="post" class="space-y-5">
