@@ -30,9 +30,9 @@
 <body class="font-dm bg-gray-50 text-gray-800">
     <div class="flex min-h-screen">
 
-
+         @include('components.side-bar' , ['active' => 'payments'])
         {{-- MAIN --}}
-        <div class="ml-56 flex-1 flex flex-col min-w-0">
+        <div class="ml-56 flex-1 flex flex-col min-w-0 ">
 
             {{-- TOPBAR --}}
             <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center gap-4">
@@ -59,16 +59,16 @@
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
             </header>
 
-
-
             {{-- CONTENT --}}
             <main class="flex-1 p-6 space-y-10">
+
+                {{-- Session error --}}
                 @if(session('error'))
-                <div class=" resposns_message absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-red-50 border border-red-200 p-4 rounded-xl text-red-700 shadow-lg">
-                    - {{ session('error') }}
+                <div class="resposns_message absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-red-50 border border-red-200 p-4 rounded-xl text-red-700 shadow-lg flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-red-400 shrink-0"></i>
+                    {{ session('error') }}
                 </div>
                 @endif
-
 
                 @foreach ($collectors as $collector)
 
@@ -76,14 +76,18 @@
                 <div>
 
                     {{-- Collector header --}}
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-mid to-light flex items-center justify-center text-white text-sm font-bold shrink-0">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-mid to-light flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-md shadow-light/20">
                             {{ strtoupper(substr($collector->name, 0, 1)) }}
                         </div>
                         <div>
                             <h2 class="font-syne font-bold text-deep text-base">{{ $collector->name }}</h2>
-                            <p class="text-xs text-gray-400">{{ $collector->invoices->count() }} invoice(s)</p>
+                            <p class="text-xs text-gray-400">
+                                <i class="fa-solid fa-receipt text-light mr-1"></i>
+                                {{ $collector->invoices->count() }} invoice(s)
+                            </p>
                         </div>
+                        <div class="ml-auto h-px flex-1 bg-gray-100 max-w-xs"></div>
                     </div>
 
                     {{-- Invoices grid --}}
@@ -154,55 +158,60 @@
                                     <span class="text-gray-700 text-xs font-medium">{{ $invoice->reading->consumption }} m³</span>
                                 </div>
 
-                                <div class="flex items-center justify-between px-5 py-4">
-                                    <div class="flex items-center gap-2 text-gray-400 text-xs">
-                                        <i class="fa-solid fa-money-bill-wave w-3 text-center text-light"></i>
-                                        <span>Total</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-syne font-extrabold text-deep text-lg">{{ number_format($invoice->total_amount, 2) }}</span>
-                                        <span class="text-gray-400 text-xs ml-0.5">MAD</span>
-                                    </div>
+                                @php
+                                $paid = $invoice->payments->sum('amount_paid');
+                                $remaining = $invoice->payments->isNotEmpty()
+                                ? $invoice->payments->sortByDesc('created_at')->first()->remaining_amount
+                                : $invoice->total_amount;
+                                $total = $paid + $remaining;
+                                @endphp
+
+                                {{-- Payment summary badges --}}
+                                <div class="flex flex-wrap gap-2 items-center justify-center px-4 py-4 text-xs font-medium">
+                                    <span class="inline-flex items-center gap-1 bg-green-50 text-green-700 border border-green-100 px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-check text-[10px]"></i>
+                                        {{ $paid }} DH paid
+                                    </span>
+                                    @if ($remaining > 0)
+                                    <span class="inline-flex items-center gap-1 bg-red-50 text-red-600 border border-red-100 px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-circle-exclamation text-[10px]"></i>
+                                        {{ $remaining }} DH remaining
+                                    </span>
+                                    @endif
+                                    <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-money-bill-wave text-[10px]"></i>
+                                        {{ $total }} DH total
+                                    </span>
                                 </div>
 
                             </div>
 
-                            {{-- Payment button --}}
+                            {{-- Payment form --}}
                             <div class="px-5 py-4 bg-gray-50/50 border-t border-gray-100">
-                                <form action="{{ route('payments.store') }}" method="POST" class="payment-form">
+                                <form action="{{ route('payments.store') }}" method="POST" class="payment-form space-y-3">
                                     @csrf
                                     <input type="hidden" name="invoice_id" value="{{ $invoice->id }}">
 
                                     @if ($invoice->total_amount > 0)
-                                    {{-- Status Badge --}}
-                                    <p class="mb-2 font-bold text-sm text-white px-3 py-1 rounded-xl bg-gradient-to-r from-teal to-light w-max">
-                                        Status: {{ ucfirst($invoice->status) }}
-                                    </p>
-
-                                    {{-- Status Select --}}
-                                    <select name="status" onchange="toggleStatusPaidFields(this)"
-                                        class="w-full mb-3 bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3">
-                                        <option value="paid" {{ $invoice->status == 'paid' ? 'selected' : '' }}>Paid</option>
-                                        <option value="partial" {{ $invoice->status == 'partial' ? 'selected' : '' }}>Partial</option>
-                                    </select>
-
-                                    {{-- Partial amount input --}}
-                                    <div class="partialFields space-y-4 {{ $invoice->status == 'partial' ? '' : 'hidden' }}">
-                                        <input type="number" name="amount_paid" placeholder="Amount to pay EX: 10DH"
-                                            class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3" />
+                                    
+                                    {{-- Submit / Already Paid --}}
+                                    @if ($remaining > 0)
+                                    <div class="">
+                                        <input type="number" name="amount_paid" placeholder="Amount to pay e.g. 10"
+                                            class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-2.5 text-sm text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
                                     </div>
-
-                                    {{-- Submit button --}}
                                     <button type="submit"
-                                        class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal to-light text-white font-bold text-sm py-2.5 rounded-xl">
+                                        class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-sm py-2.5 rounded-xl shadow-sm shadow-light/20 hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 transition-all duration-150">
+                                        <i class="fa-solid fa-circle-check text-xs"></i>
                                         Mark as Paid
                                     </button>
-
                                     @else
-                                    {{-- Already Paid --}}
-                                    <p class="w-full flex items-center justify-center gap-2 bg-gray-400 text-white font-bold text-sm py-2.5 rounded-xl">
-                                        Payed
-                                    </p>
+                                    <div class="w-full flex items-center justify-center gap-2 bg-gray-200 text-gray-500 font-syne font-bold text-sm py-2.5 rounded-xl cursor-not-allowed">
+                                        <i class="fa-solid fa-check-double text-xs"></i>
+                                        Fully Paid
+                                    </div>
+                                    @endif
+
                                     @endif
                                 </form>
                             </div>
@@ -217,42 +226,42 @@
                 @endforeach
 
             </main>
-        </div>
 
-    </div>
 
-    <script>
-        function toggleStatusPaidFields(selectElement) {
-            const form = selectElement.closest('form');
-            const fields = form.querySelector('.partialFields');
-            const input = fields.querySelector('input');
 
-            const isPartial = selectElement.value === "partial";
 
-            fields.classList.toggle("hidden", !isPartial);
-            input.disabled = !isPartial;
+            <script>
+                // function toggleStatusPaidFields(selectElement) {
+                //     const form = selectElement.closest('form');
+                //     const fields = form.querySelector('.partialFields');
+                //     const input = fields.querySelector('input');
 
-            if (!isPartial) {
-                input.value = '';
-            }
-        }
+                //     const isPartial = selectElement.value === "partial";
 
-        const hideresponsMessage = () => {
-            const respons_msg = document.querySelector('.resposns_message')
-            if (respons_msg) {
-                setTimeout(() => {
-                    respons_msg.classList.add('hidden');
-                }, 5000);
-            }
+                //     fields.classList.toggle("hidden", !isPartial);
+                //     input.disabled = !isPartial;
 
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('select[name="status"]').forEach(select => {
-                toggleStatusPaidFields(select);
-                hideresponsMessage()
-            });
-        });
-    </script>
+                //     if (!isPartial) {
+                //         input.value = '';
+                //     }
+                // }
+
+                const hideresponsMessage = () => {
+                    const respons_msg = document.querySelector('.resposns_message')
+                    if (respons_msg) {
+                        setTimeout(() => {
+                            respons_msg.classList.add('hidden');
+                        }, 5000);
+                    }
+
+                }
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.querySelectorAll('select[name="status"]').forEach(select => {
+                        toggleStatusPaidFields(select);
+                        hideresponsMessage()
+                    });
+                });
+            </script>
 </body>
 
 </html>
