@@ -17,7 +17,8 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        $payments = Payment::with('invoice.collector')->paginate(10);
+        return view('dashboards.payments.index', compact('payments'));
     }
 
     /**
@@ -28,11 +29,13 @@ class PaymentController extends Controller
     {
         $user = Auth::user();
         if ($user->role == 'admin') {
-            $collectors = User::with('invoices')->whereIn('role', ['collector', 'admin'])->get();
+            $collectors = User::with('invoices.payments')->whereIn('role', ['collector', 'admin'])->get();
         } elseif ($user->role == 'collector') {
-            $collectors = User::with('invoices')->where('id', $user->id)->get();
+            $collectors = User::with('invoices.payments')->where('id', $user->id)->get();
         }
-        return view('payments.create', compact('collectors'));
+
+
+        return view('dashboards.payments.create', compact('collectors'));
     }
 
     /**
