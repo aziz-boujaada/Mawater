@@ -5,6 +5,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\CollectorMiddleware;
 use App\Http\Middleware\RepairAgentMiddleware;
+use App\Http\Middleware\RoleMiddlware;
 use App\Http\Middleware\VillagerMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'repair_agent' => RepairAgentMiddleware::class,
             'collector' => CollectorMiddleware::class,
             'villager' => VillagerMiddleware::class,
+            'role' => RoleMiddlware::class , 
 
         ]);
     })

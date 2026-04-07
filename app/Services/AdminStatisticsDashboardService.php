@@ -33,7 +33,7 @@ class AdminStatisticsDashboardService {
    }
 
    public function TotaBrokenMetrs(){
-    return Meter::whereIn('status' , ['brokrn' , 'out_service'])->count();
+    return Meter::whereIn('status' , ['broken' , 'out_service'])->count();
    }
 
    public function getTotalBudget(){
