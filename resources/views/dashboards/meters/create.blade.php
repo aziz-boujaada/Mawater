@@ -35,8 +35,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 
-<body class="font-dm bg-deep min-h-screen flex items-center justify-center px-4 py-10">
-
+<body class="font-dm bg-white min-h-screen flex items-center justify-center px-4 py-10">
+    @include('components.side-bar' , ['active' => 'meters'])
     <div class="animate-slideUp bg-white rounded-3xl p-10 w-full max-w-md shadow-2xl relative overflow-hidden">
 
         {{-- Top accent bar --}}
