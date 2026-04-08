@@ -16,7 +16,8 @@ class RepairController extends Controller
      */
     public function index()
     {
-        //
+        $repairs = Repair::with('repair_agent')->paginate(10);
+        return view('dashboards.repairs.index' , compact('repairs'));
     }
 
     /**
@@ -26,7 +27,7 @@ class RepairController extends Controller
     {
 
         $meters = Meter::with('villager')->get();
-        return view('repairs.create' , compact('meters'));
+        return view('dashboards.repairs.create' , compact('meters'));
     }
 
     /**
