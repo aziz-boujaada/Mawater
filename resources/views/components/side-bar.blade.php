@@ -48,32 +48,54 @@
 
     {{-- Nav --}}
     <nav class="flex-1 flex flex-col gap-0.5 px-3 overflow-y-auto">
-
         @php
-        $dashboardRoute = auth()->user()->role === 'admin'
-        ? 'dashboard.admin'
-        : 'dashboard.collector';
+        $role = auth()->user()->role;
 
-        $links = [
+        $dashboardRoute = match ($role) {
+        'admin' => 'dashboard.admin',
+        'collector' => 'dashboard.collector',
+        'repair_agent' => 'dashboard.repair_agent',
+        };
+
+        $allLinks = [
+        'admin' => [
         ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
         ['key' => 'meters', 'label' => 'Meters', 'icon' => 'fa-gauge', 'route' => 'meters'],
         ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
         ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],
-        ['key' => 'payments', 'label' => 'payments', 'icon' => 'fa-receipt', 'route' => 'payments'],
+        ['key' => 'payments', 'label' => 'Payments', 'icon' => 'fa-money-bill', 'route' => 'payments'],
+        ['key' => 'repairs', 'label' => 'Repairs', 'icon' => 'fa-screwdriver-wrench', 'route' => 'repairs'],
+        ],
 
+        'repair_agent' => [
+        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
+        ['key' => 'repairs', 'label' => 'Repairs', 'icon' => 'fa-screwdriver-wrench', 'route' => 'repairs'],
+        ],
+
+        'collector' => [
+        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
+        ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
+        ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],
+        ['key' => 'payments', 'label' => 'Payments', 'icon' => 'fa-money-bill', 'route' => 'payments'],
+        ],
         ];
+
+        $links = $allLinks[$role] ?? [];
         @endphp
 
         @foreach($links as $link)
         @php $isActive = ($active ?? '') === $link['key']; @endphp
+
         <a href="{{ route($link['route']) }}"
             class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors
-                      {{ $isActive
-                          ? 'bg-white/12 text-white font-medium'
-                          : 'text-white/50 hover:text-white hover:bg-white/8' }}">
+       {{ $isActive
+            ? 'bg-white/12 text-white font-medium'
+            : 'text-white/50 hover:text-white hover:bg-white/8' }}">
+
             @if($isActive)
             <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-light rounded-r-full"></span>
             @endif
+
             <i class="fa-solid {{ $link['icon'] }} w-4 text-center shrink-0 {{ $isActive ? 'text-light' : '' }}"></i>
             {{ $link['label'] }}
         </a>
@@ -89,8 +111,8 @@
                 {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 2)) }}
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-white text-xs font-semibold truncate">{{ auth()->user()->name ?? 'Admin' }}</p>
-                <p class="text-white/40 text-[0.68rem] truncate">{{ auth()->user()->email ?? 'admin@meterpro.com' }}</p>
+                <p class="text-white text-xs font-semibold truncate">{{ auth()->user()->name }}</p>
+                <p class="text-white/40 text-[0.68rem] truncate">{{ auth()->user()->email }}</p>
             </div>
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"

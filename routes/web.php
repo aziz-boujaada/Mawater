@@ -49,12 +49,12 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // collector 
-    Route::middleware(['collector'])->group(function(){
+    Route::middleware(['collector'])->group(function () {
         Route::get('/dashboard/collector', [DashboardsController::class, 'collector'])->name('dashboard.collector');
     });
 
     /// collector and admin 
-    Route::middleware(['role:collector ,admin'])->group(function () {
+    Route::middleware(['role:collector,admin'])->group(function () {
 
         Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
         Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
@@ -74,8 +74,11 @@ Route::middleware(['auth'])->group(function () {
 
     /// repair agent 
 
-    Route::middleware(['repair_agent'])->group(function () {
+    Route::middleware(['role:repair_agent,admin'])->group(function () {
+        Route::get('/dashboard/repair-agent', [DashboardsController::class, 'repair_agent'])->name('dashboard.repair_agent');
+        Route::get('repairs', [RepairController::class, 'index'])->name('repairs');
         Route::get('repairs/create', [RepairController::class, 'create'])->name('repairs.create');
         Route::post('repairs/store', [RepairController::class, 'store'])->name('repairs.store');
+        Route::get('repairs/show', [RepairController::class, 'show'])->name('repairs.show');
     });
 });
