@@ -105,87 +105,88 @@
 
             {{-- ── STAT CARDS ── --}}
             {{-- ── STAT CARDS ── --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+           <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
-                {{-- Total Users --}}
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-deep/10 flex items-center justify-center">
-                            <i class="fa-solid fa-users text-deep"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
-                    </div>
-                    <p class="text-2xl font-syne font-bold text-deep">{{ $total_users }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Total Users</p>
-                </div>
-
-                {{-- Total Budget --}}
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-                            <i class="fa-solid fa-money-bill-wave text-green-500"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
-                    </div>
-                    <p class="text-2xl font-syne font-bold text-green-500">{{ $total_budget }} DH</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Total Budget</p>
-                </div>
-
-                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-                            <i class="fa-solid fa-money-bill-wave text-green-500"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
-                    </div>
-                    <p class="text-2xl font-syne font-bold text-green-500">{{ $unpaid_payment }} DH</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Unpaid Payments</p>
-                </div>
-
-                {{-- Active Meters --}}
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-light/15 flex items-center justify-center">
-                            <i class="fa-solid fa-circle-check text-mid"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">+5%</span>
-                    </div>
-                    <p class="text-2xl font-syne font-bold text-deep">{{ $activ_meters }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Active Meters</p>
-                </div>
-
-                {{-- Broken / Out of Service --}}
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
-                            <i class="fa-solid fa-circle-exclamation text-red-400"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-red-400 bg-red-50 px-2 py-0.5 rounded-full">-3%</span>
-                    </div>
-                    <p class="text-2xl font-syne font-bold text-deep">{{ $broken_and_outService_meters }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Broken / Out of Service</p>
-                </div>
-
-                {{-- Villagers --}}
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-teal/10 flex items-center justify-center">
-                            <i class="fa-solid fa-house-user text-teal"></i>
-                        </div>
-                        <div class="flex flex-col gap-1 items-end">
-                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Subscribed: {{ $subscriberd_villagers }}
-                            </span>
-                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-red-500 bg-red-50 px-2.5 py-1 rounded-full">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> UnSubscribed: {{ $unsubscriberd_villagers }}
-                            </span>
-                        </div>
-                    </div>
-                    <p class="text-2xl font-syne font-bold text-deep">{{ $total_villagers }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Villagers</p>
-                </div>
-
+    {{-- Total Users --}}
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div class="w-10 h-10 rounded-xl bg-deep/10 flex items-center justify-center">
+                <i class="fa-solid fa-users text-deep"></i>
             </div>
+            <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
+        </div>
+        <p class="text-2xl font-syne font-bold text-deep">{{ $total_users }}</p>
+        <p class="text-xs text-gray-400 mt-0.5">Total Users</p>
+    </div>
+
+    {{-- Total Budget --}}
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                <i class="fa-solid fa-wallet text-green-500"></i>
+            </div>
+            <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
+        </div>
+        <p class="text-2xl font-syne font-bold text-green-500">{{ $total_budget }} DH</p>
+        <p class="text-xs text-gray-400 mt-0.5">Total Budget</p>
+    </div>
+
+    {{-- Unpaid Payments --}}
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div class="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center">
+                <i class="fa-solid fa-money-bill-wave text-yellow-500"></i>
+            </div>
+            <span class="text-xs font-semibold text-yellow-500 bg-yellow-50 px-2 py-0.5 rounded-full">-8%</span>
+        </div>
+        <p class="text-2xl font-syne font-bold text-yellow-600">{{ $unpaid_payment }} DH</p>
+        <p class="text-xs text-gray-400 mt-0.5">Unpaid Payments</p>
+    </div>
+
+    {{-- Active Meters --}}
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div class="w-10 h-10 rounded-xl bg-light/15 flex items-center justify-center">
+                <i class="fa-solid fa-circle-check text-mid"></i>
+            </div>
+            <span class="text-xs font-semibold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">+5%</span>
+        </div>
+        <p class="text-2xl font-syne font-bold text-deep">{{ $activ_meters }}</p>
+        <p class="text-xs text-gray-400 mt-0.5">Active Meters</p>
+    </div>
+
+    {{-- Broken / Out of Service --}}
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+                <i class="fa-solid fa-circle-exclamation text-red-400"></i>
+            </div>
+            <span class="text-xs font-semibold text-red-400 bg-red-50 px-2 py-0.5 rounded-full">-3%</span>
+        </div>
+        <p class="text-2xl font-syne font-bold text-deep">{{ $broken_and_outService_meters }}</p>
+        <p class="text-xs text-gray-400 mt-0.5">Broken / Out of Service</p>
+    </div>
+
+    {{-- Villagers --}}
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between mb-4">
+            <div class="w-10 h-10 rounded-xl bg-teal/10 flex items-center justify-center">
+                <i class="fa-solid fa-house-user text-teal"></i>
+            </div>
+            <div class="flex flex-col gap-1 items-end">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Subscribed: {{ $subscriberd_villagers }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-red-500 bg-red-50 px-2.5 py-1 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> UnSubscribed: {{ $unsubscriberd_villagers }}
+                </span>
+            </div>
+        </div>
+        <p class="text-2xl font-syne font-bold text-deep">{{ $total_villagers }}</p>
+        <p class="text-xs text-gray-400 mt-0.5">Villagers</p>
+    </div>
+
+</div>
             {{-- ── BOTTOM GRID: Table + Activity ── --}}
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 

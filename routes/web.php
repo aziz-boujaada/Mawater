@@ -32,20 +32,29 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/meters', [MetersController::class, 'index'])->name('meters');
         Route::get('/meter/create', [MetersController::class, 'create'])->name('meter.create');
         Route::post('/meter/store', [MetersController::class, 'store'])->name('meter.store');
+        Route::post('/meter/show', [MetersController::class, 'show'])->name('meter.show');
 
-        Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
-        Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
-        Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
 
-        Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
-        Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
-        Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
-        Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+        // Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
+        // Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
+        // Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
+        // Route::get('/reading/show/{id}', [InvoiceController::class, 'show'])->name('reading.show');
+
+
+
+        // Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
+        // Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+        // Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
+        // Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
     });
 
-    /// collector
+    // collector 
     Route::middleware(['collector'])->group(function () {
         Route::get('/dashboard/collector', [DashboardsController::class, 'collector'])->name('dashboard.collector');
+    });
+
+    /// collector and admin 
+    Route::middleware(['role:collector,admin'])->group(function () {
 
         Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
         Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
@@ -65,8 +74,11 @@ Route::middleware(['auth'])->group(function () {
 
     /// repair agent 
 
-    Route::middleware(['repair_agent'])->group(function () {
+    Route::middleware(['role:repair_agent,admin'])->group(function () {
+        Route::get('/dashboard/repair-agent', [DashboardsController::class, 'repair_agent'])->name('dashboard.repair_agent');
+        Route::get('repairs', [RepairController::class, 'index'])->name('repairs');
         Route::get('repairs/create', [RepairController::class, 'create'])->name('repairs.create');
         Route::post('repairs/store', [RepairController::class, 'store'])->name('repairs.store');
+        Route::get('repairs/show', [RepairController::class, 'show'])->name('repairs.show');
     });
 });

@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Villager;
 use App\Services\StoreMeterService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class MetersController extends Controller
 {
@@ -17,7 +17,8 @@ class MetersController extends Controller
      */
     public function index()
     {
-       
+       $meters = Meter::with('villager')->paginate(10);
+       return view('dashboards.meters.index' , compact('meters'));
     }
 
     /**
@@ -26,7 +27,7 @@ class MetersController extends Controller
     public function create()
     {
          $villagers = Villager::all();
-         return  view('meters.create' , compact('villagers'));
+         return  view('dashboards.meters.create' , compact('villagers'));
     }
 
     /**
@@ -37,7 +38,7 @@ class MetersController extends Controller
         $meterData = $request->validated();
         $meter = StoreMeterService::storeMeter($meterData);
 
-        return redirect()->route('dashboard')->with('success' , "Meter with refernce {$meter->reference} created with success");
+        return redirect()->route('dashboard.admin')->with('success' , "Meter with refernce {$meter->reference} created with success");
     }
 
     /**
