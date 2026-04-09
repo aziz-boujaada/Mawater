@@ -29,10 +29,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/dashboard/admin', [DashboardsController::class, 'admin'])->name('dashboard.admin');
 
-        Route::get('/meters', [MetersController::class, 'index'])->name('meters');
-        Route::get('/meter/create', [MetersController::class, 'create'])->name('meter.create');
-        Route::post('/meter/store', [MetersController::class, 'store'])->name('meter.store');
-        Route::post('/meter/show', [MetersController::class, 'show'])->name('meter.show');
+
+
+
+
 
 
         // Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
@@ -60,6 +60,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
         Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
         Route::get('/reading/show/{id}', [InvoiceController::class, 'show'])->name('reading.show');
+
+        Route::get('/meters', [MetersController::class, 'index'])->name('meters');
+        Route::get('/meter/create', [MetersController::class, 'create'])->name('meter.create');
+        Route::post('/meter/store', [MetersController::class, 'store'])->name('meter.store');
+        Route::get('/meter/show/{id}', [MetersController::class, 'show'])->name('meter.show');
+        Route::get('/meter/edit/{id}', [MetersController::class, 'edit'])->name('meter.edit');
+        Route::put('/meter/update/{id}', [MetersController::class, 'update'])->name('meter.update');
 
 
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');

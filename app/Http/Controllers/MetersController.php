@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMeterRequest;
+use App\Http\Requests\UpdateMeterRequest;
 use App\Models\Meter;
 use App\Models\User;
 use App\Models\Villager;
 use App\Services\StoreMeterService;
+use App\Services\UpdateMeterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,17 +54,22 @@ class MetersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Meter $meters)
+    public function edit(string $id)
     {
-        //
+
+        return view('dashboards.meters.edit' , compact('id'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Meter $meter)
+    public function update(UpdateMeterRequest $request, string $id)
     {
-        //
+        $meter_data = $request->validated();
+        $meter = new UpdateMeterService();
+        $meter->updateMeter($meter_data , $id);
+
+        return redirect()->route('meters')->with('success' , 'meter updated with successfully');
     }
 
     /**
