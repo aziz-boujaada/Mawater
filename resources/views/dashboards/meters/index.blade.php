@@ -83,7 +83,7 @@
                                         <span class="text-gray-700 font-medium text-sm">{{ $meter->villager?->user?->name ?? '—' }}</span>
                                     </td>
                                     <td class="px-6 py-3.5">{{ $meter->installation_date }}</td>
-                                   <td class="px-6 py-3.5">
+                                    <td class="px-6 py-3.5">
                                         @if($meter->status === 'active')
                                         <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
                                             <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
@@ -102,9 +102,11 @@
                                         </span>
                                         @endif
                                     </td>
-                                    
+
                                     <td>
                                         <a href="{{ route('meter.show', $meter->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
+                                        <a href="{{ route('meter.edit', $meter->id) }}" class="text-xs text-mid font-semibold hover:underline">Edit</a>
+
                                     </td>
                                 </tr>
                                 @empty
@@ -124,10 +126,33 @@
                         </table>
                     </div>
                 </div>
+                <div id="response_messgaes">
+                    @if(session('error'))
+                    <div class="mb-4 rounded-xl bg-red-50 border border-red-200 p-4 text-red-700">
+                        _ {{ session('error') }}
+                    </div>
+                    @elseif(session('success'))
+                    <div class="mb-4 rounded-xl bg-green-50 border border-green-200 p-4 text-green-700">
+                        _ {{ session('success') }}
+                    </div>
+                    @endif
+                </div>
                 {{ $meters->links() }}
             </main>
         </div>
     </div>
 </body>
+
+<script>
+    const hideresponsMessage = () => {
+        const respons_msg = document.getElementById('.resposns_messages')
+        if (respons_msg) {
+            setTimeout(() => {
+                respons_msg.classList.add('hidden');
+            }, 5000);
+        }
+         hideresponsMessage()
+    }
+</script>
 
 </html>
