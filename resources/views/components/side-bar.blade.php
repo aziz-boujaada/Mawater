@@ -60,6 +60,7 @@
         $allLinks = [
         'admin' => [
         ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
+        ['key' => 'users', 'label' => 'users', 'icon' => 'fa-users', 'route' => 'users'],
         ['key' => 'meters', 'label' => 'Meters', 'icon' => 'fa-gauge', 'route' => 'meters'],
         ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
         ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],

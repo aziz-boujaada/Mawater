@@ -56,25 +56,26 @@
                             <input type="text" placeholder="Search…" class="bg-transparent outline-none text-gray-600 placeholder-gray-400 text-sm w-40">
                         </div>
                     </div>
-
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
                                 <tr class="bg-gray-50 text-left text-[0.72rem] uppercase tracking-widest text-gray-400 font-semibold">
-                                    <th class="px-6 py-3">ID</th>
-                                    <th class="px-6 py-3">Meter Ref</th>
-                                    <th class="px-6 py-3">Villager</th>
-                                    <th class="px-6 py-3">Previous Reading</th>
-                                    <th class="px-6 py-3">Current Reading</th>
-                                    <th class="px-6 py-3">Consumption</th>
-                                    <th class="px-6 py-3">Reading Date</th>
+                                    <th class="px-6 py-3"><i class="fa-solid fa-hashtag mr-1.5"></i>ID</th>
+                                    <th class="px-6 py-3"><i class="fa-solid fa-gauge mr-1.5"></i>Meter Ref</th>
+                                    <th class="px-6 py-3"><i class="fa-solid fa-user mr-1.5"></i>Villager</th>
+                                    <th class="px-6 py-3"><i class="fa-solid fa-arrow-left mr-1.5"></i>Previous Reading</th>
+                                    <th class="px-6 py-3"><i class="fa-solid fa-arrow-right mr-1.5"></i>Current Reading</th>
+                                    <th class="px-6 py-3"><i class="fa-solid fa-bolt mr-1.5"></i>Consumption</th>
+                                    <th class="px-6 py-3"><i class="fa-solid fa-calendar-days mr-1.5"></i>Reading Date</th>
                                     <th class="px-6 py-3"></th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-50">
                                 @forelse($readings as $reading)
                                 <tr class="hover:bg-gray-50/60 transition-colors">
-                                    <td class="px-6 py-3.5 text-gray-400 font-mono text-xs">#{{ $reading->id }}</td>
+                                    <td class="px-6 py-3.5 text-gray-400 font-mono text-xs">
+                                        <i class="fa-solid fa-hashtag mr-1 text-gray-300"></i>#{{ $reading->id }}
+                                    </td>
                                     <td class="px-6 py-3.5">
                                         <span class="inline-flex items-center gap-1.5 bg-[#f4fafa] border border-[#d4e8ec] text-teal text-xs font-semibold px-2.5 py-1 rounded-full">
                                             <i class="fa-solid fa-gauge text-[0.6rem]"></i>
@@ -82,14 +83,39 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-3.5">
-                                        <span class="text-gray-700 font-medium text-sm">{{ $reading->meter?->villager?->user?->name ?? '—' }}</span>
+                                        <span class="inline-flex items-center gap-1.5 text-gray-700 font-medium text-sm">
+                                            <i class="fa-solid fa-user text-gray-300 text-xs"></i>
+                                            {{ $reading->meter?->villager?->user?->name ?? '—' }}
+                                        </span>
                                     </td>
-                                    <td class="px-6 py-3.5">{{ number_format($reading->previous_reading, 2) }}</td>
-                                    <td class="px-6 py-3.5">{{ number_format($reading->current_reading, 2) }}</td>
-                                    <td class="px-6 py-3.5">{{ number_format($reading->consumption, 2) }}</td>
-                                    <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $reading->reading_date }}</td>
+                                    <td class="px-6 py-3.5">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-arrow-left text-gray-300 text-xs"></i>
+                                            {{ number_format($reading->previous_reading, 2) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3.5">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-arrow-right text-gray-300 text-xs"></i>
+                                            {{ number_format($reading->current_reading, 2) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3.5">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-bolt text-gray-300 text-xs"></i>
+                                            {{ number_format($reading->consumption, 2) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3.5 text-gray-500 text-xs">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i class="fa-solid fa-calendar-days text-gray-300"></i>
+                                            {{ $reading->reading_date }}
+                                        </span>
+                                    </td>
                                     <td class="px-6 py-3.5 text-right">
-                                        <a href="{{ route('reading.show', $reading->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
+                                        <a href="{{ route('reading.show', $reading->id) }}" class="inline-flex items-center gap-1.5 text-xs text-mid font-semibold hover:underline">
+                                            <i class="fa-solid fa-eye"></i> View
+                                        </a>
                                     </td>
                                 </tr>
                                 @empty
