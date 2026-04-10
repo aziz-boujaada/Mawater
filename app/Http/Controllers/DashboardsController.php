@@ -24,7 +24,13 @@ class DashboardsController extends Controller
         $activ_meters = $statsService->getTotalActiveMetrs();
         $broken_and_outService_meters = $statsService->TotaBrokenMetrs();
         $total_budget = $statsService->getTotalBudget();
+        $total_paid = $statsService->getTotalPaid();
         $unpaid_payment = $statsService->getTotalUnpaidBudget();
+        $repairLoseAmount = $statsService->getRepairLosesAmount();
+        $netProfit = $statsService->calculNetProfit();
+        $profitMargin = $statsService->getProfitMargin();
+        $lossPercentage = $statsService->getLossPercentage();
+        $paidPercentage = $statsService->getPaidPaymentsPercentage();
 
         return view('dashboards.admin', compact([
             'total_users',
@@ -34,7 +40,13 @@ class DashboardsController extends Controller
             'activ_meters',
             'broken_and_outService_meters',
             'total_budget',
-            'unpaid_payment'
+            'total_paid',
+            'unpaid_payment',
+            'repairLoseAmount',
+            'netProfit',
+            'profitMargin',
+            'lossPercentage',
+            'paidPercentage'
         ]));
     }
 
@@ -66,24 +78,18 @@ class DashboardsController extends Controller
     {
         $repairAgentId = Auth::id();
 
-        $repairs = Repair::where('repair_agent_id', $repairAgentId);
+        $repairsCount = Repair::count();
 
-        $repairsCount = $repairs->count();
 
-        $repairsAmountLose = Repair::where('repair_agent_id', $repairAgentId)
-            ->sum('repair_cost');
+        $repairsAmountLose = Repair::sum('repair_cost');
 
         $moyenCost = $repairsCount > 0
             ? $repairsAmountLose / $repairsCount
             : 0;
 
-        $completedRepairs = Repair::where('repair_agent_id', $repairAgentId)
-            ->where('status', 'repaired')
-            ->count();
+        $completedRepairs = Repair::where('status', 'repaired')->count();
 
-        $inProgressRepairs = Repair::where('repair_agent_id', $repairAgentId)
-            ->where('status', 'in progress')
-            ->count();
+        $inProgressRepairs = Repair::where('status', 'in progress')->count();
 
         $completionRate = $repairsCount > 0
             ? ($completedRepairs / $repairsCount) * 100

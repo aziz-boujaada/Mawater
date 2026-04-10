@@ -66,8 +66,7 @@
                                     <th class="px-6 py-3">Invoice Total</th>
                                     <th class="px-6 py-3">Collector</th>
                                     <th class="px-6 py-3">Amount Paid</th>
-                                    <th class="px-6 py-3">Amount Remaining</th>
-                                    <th class="px-6 py-3">Status</th>
+
                                     <th class="px-6 py-3">Paid at</th>
 
                                     <th class="px-6 py-3"></th>
@@ -102,28 +101,8 @@
                                         </span>
                                     </td>
 
-                                    <td class="px-6 py-3.5">
-                                        <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">
-                                            <i class="fa-solid fa-clock text-[0.7rem]"></i>
-                                            {{ number_format($payment->remaining_amount, 2) }} DH
-                                        </span>
-                                    </td>
-
-                                    <td class="px-6 py-3.5 text-gray-500 text-xs">
-                                        @if($payment->amount_paid == 0)
-                                             <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">
-                                            <i class="fa-solid fa-clock text-[0.7rem]"></i>
-                                            unpaid
-                                        </span>
-                                        @elseif($payment->remaining_amount == 0)
-                                          <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
-                                            <i class="fa-solid fa-check text-[0.7rem]"></i>
-                                           Paid
-                                        </span>
-                                        @endif
+                                  
                                     <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $payment->payment_date }}</td>
-
-                                    </td>
 
                                     <td class="px-6 py-3.5 text-right">
                                         <a href="{{ route('reading.show', $payment->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
