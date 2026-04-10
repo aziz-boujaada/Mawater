@@ -32,7 +32,7 @@
     <div class="flex min-h-screen">
 
         {{-- SIDEBAR --}}
-      @include('components.side-bar' ,['active' => 'invoices'])
+        @include('components.side-bar' ,['active' => 'invoices'])
 
         {{-- MAIN --}}
         <div class="ml-56 flex-1 flex flex-col min-w-0">
@@ -74,6 +74,8 @@
                                     <th class="px-6 py-3">Meter Ref</th>
                                     <th class="px-6 py-3">Villager</th>
                                     <th class="px-6 py-3">Amount</th>
+                                    <th class="px-6 py-3">Remaining Amount</th>
+                                    <th class="px-6 py-3">status</th>
                                     <th class="px-6 py-3">Billing Period</th>
                                     <th class="px-6 py-3"></th>
                                 </tr>
@@ -101,7 +103,28 @@
                                         <span class="font-syne font-bold text-deep">{{ number_format($invoice->total_amount, 2) }}</span>
                                         <span class="text-yellow-600 text-xs ml-0.5">DH</span>
                                     </td>
-                                    <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $invoice->billing_period }}</td>
+                                    
+                                     <td class="px-6 py-3.5">
+                                        <span class="font-syne bg-red-50 p-1 rounded-2xl  font-bold text-red-500">{{ number_format($invoice->remaining_amount, 2) }}</span>
+                                        <span class="text-yellow-600 text-xs ml-0.5">DH</span>
+                                    </td>
+                                    <td class="px-6 py-3.5 text-gray-500 text-xs">
+                                        @if ($invoice->status == 'paid')
+                                        <span class="inline-flex items-center justify-center w-[100px] gap-1.5  font-syne font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+                                            paid
+                                        </span>
+                                        @elseif($invoice->status == 'partially_paid')
+                                        <span class="inline-flex items-center justify-center w-[100px] gap-1.5  font-syne font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full">
+                                            Partial Paid
+                                        </span>
+                                        @elseif($invoice->status == 'unpaid')
+                                        <span class="inline-flex items-center justify-center w-[100px] gap-1.5  font-syne font-semibold text-red-600 bg-red-50 px-2.5 py-1 rounded-full">
+                                            Unpaid
+                                        </span>
+                                        @endif
+                                        <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $invoice->billing_period }}</td>
+                                        
+                                    </td>
                                     <td class="px-6 py-3.5 text-right">
                                         <a href="{{ route('invoices.show' ,$invoice->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
                                     </td>

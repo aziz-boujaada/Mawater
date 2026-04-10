@@ -13,7 +13,8 @@ class Invoice extends Model
         'reading_id',
         'billing_period',
         'total_amount', 
-        'collector_id'
+        'collector_id',
+        'remaining_amount'
     ];
 
    

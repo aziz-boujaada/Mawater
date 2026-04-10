@@ -78,11 +78,12 @@ class StoreInvoiceService
                 'invoice_reference' => 'INV-' . now()->format('Y-m-d') . '-' . Str::random(6),
                 'billing_period' => $billing_period , 
                 'total_amount' => $total_amount , 
-                'collector_id' => $collector_id
+                'collector_id' => $collector_id,
+                'remaining_amount' => $total_amount , 
     
             ]);
     
             return $invoice;
-        });
+            });
     }
 }

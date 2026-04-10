@@ -159,11 +159,9 @@
                                 </div>
 
                                 @php
-                                $paid = $invoice->payments->sum('amount_paid');
-                                $remaining = $invoice->payments->isNotEmpty()
-                                ? $invoice->payments->sortByDesc('created_at')->first()->remaining_amount
-                                : $invoice->total_amount;
-                                $total = $paid + $remaining;
+                                $paid = $invoice->payments?->sum('amount_paid');
+                                $remaining = $invoice->remaining_amount ?? $invoice->total_amount;
+                                $total = $invoice->total_amount;
                                 @endphp
 
                                 {{-- Payment summary badges --}}

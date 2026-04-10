@@ -31,21 +31,40 @@ class StorePaymentService
     }
 
 
+    public static function updateInvoiceStatus($remaining_amount, $invoice_id)
+    {
+
+        $invoice = Invoice::findOrFail($invoice_id);
+        $invoice->remaining_amount = $remaining_amount;
+
+        if ($remaining_amount == 0) {
+            $invoice->status = 'paid';
+        } else {
+            $invoice->status = 'partially_paid';
+        }
+
+        return $invoice->save();
+
+    }
+
     public static function storePayment($payment_data)
     {
 
         $collector_id = Auth::id();
-        $remaining_amount = self::calculeDRemainingAmount($payment_data);
-        $payment = Payment::create([
+        $invoice_id = $payment_data['invoice_id'];
 
-            'invoice_id'  => $payment_data['invoice_id'],
+        $remaining_amount = self::calculeDRemainingAmount($payment_data);
+
+        $payment = Payment::create([
+            'invoice_id'  => $invoice_id,
             'collector_id' => $collector_id,
             'amount_paid' => $payment_data['amount_paid'],
             'payment_date' => now(),
 
         ]);
 
-        $payment->update(['remaining_amount' => $remaining_amount,]);
+        self::updateInvoiceStatus($remaining_amount, $invoice_id);
+
         return $payment;
     }
 }
