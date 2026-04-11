@@ -21,15 +21,21 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 
 
 Route::middleware(['auth'])->group(function () {
-    
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
     Route::middleware(['admin'])->group(function () {
-        
+
         Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
         Route::post('/register', [AuthController::class, 'register'])->name('register.store');
         Route::get('/dashboard/admin', [DashboardsController::class, 'admin'])->name('dashboard.admin');
         Route::get('/users', [UserController::class, 'index'])->name('users');
+        Route::get('/users/show/{id}', [UserController::class, 'showUser'])->name('user.show');
+        Route::get('/users/edit/{id}', [UserController::class, 'editUser'])->name('user.edit');
+        Route::put('/users/update/{id}', [UserController::class, 'updateProfile'])->name('user.update');
+
+
+
 
 
         // Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');

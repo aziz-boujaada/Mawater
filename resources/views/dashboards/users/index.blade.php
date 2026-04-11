@@ -106,8 +106,8 @@
                                     <td class="text-gray-700 font-medium text-sm">{{ $user->phone }}</td>
 
                                     <td>
-                                        <a href="#" class="text-xs text-mid font-semibold hover:underline">View</a>
-                                        <a href="#" class="text-xs text-mid font-semibold hover:underline">Edit</a>
+                                        <a href="{{ route('user.show' , $user->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
+                                        <a href="{{ route('user.edit' , $user->id) }}" class="text-xs text-mid font-semibold hover:underline">Edit</a>
 
                                     </td>
                                 </tr>
