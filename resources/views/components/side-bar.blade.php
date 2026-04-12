@@ -55,6 +55,7 @@
         'admin' => 'dashboard.admin',
         'collector' => 'dashboard.collector',
         'repair_agent' => 'dashboard.repair_agent',
+        'villager' => 'dashboard.villager'
         };
 
         $allLinks = [
@@ -74,6 +75,13 @@
         ],
 
         'collector' => [
+        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
+        ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
+        ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],
+        ['key' => 'payments', 'label' => 'Payments', 'icon' => 'fa-money-bill', 'route' => 'payments'],
+        ],
+
+        'villager' => [
         ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
         ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
         ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],

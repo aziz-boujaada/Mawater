@@ -18,6 +18,8 @@ Route::get('/', function () {
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.store');
+Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 
 
 Route::middleware(['auth'])->group(function () {
@@ -26,8 +28,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['admin'])->group(function () {
 
-        Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
-        Route::post('/register', [AuthController::class, 'register'])->name('register.store');
         Route::get('/dashboard/admin', [DashboardsController::class, 'admin'])->name('dashboard.admin');
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/show/{id}', [UserController::class, 'showUser'])->name('user.show');
@@ -90,5 +90,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('repairs/create', [RepairController::class, 'create'])->name('repairs.create');
         Route::post('repairs/store', [RepairController::class, 'store'])->name('repairs.store');
         Route::get('repairs/show', [RepairController::class, 'show'])->name('repairs.show');
+    });
+
+    // villager
+
+    Route::middleware(['role:villager,admin,collector'])->group(function () {
+        Route::get('dashboard/villager', [DashboardsController::class, 'villager'])->name('dashboard.villager');
+
+        Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
+        Route::get('/reading/show/{id}', [InvoiceController::class, 'show'])->name('reading.show');
+
+        Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
+        Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+
+        Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
     });
 });
