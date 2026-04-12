@@ -17,7 +17,18 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::with('invoice.collector')->paginate(10);
+        $user = Auth::user();
+
+        if ($user->role == 'villager') {
+            $villagerId = $user->villager?->id;
+
+            $payments = Payment::with('invoice.reading.meter.villager')
+                ->whereHas('invoice.reading.meter', function ($query) use ($villagerId) {
+                    $query->where('villager_id', $villagerId);
+                })->paginate(10);
+        } else {
+            $payments = Payment::with('invoice.reading.meter.villager')->paginate(10);
+        }
         return view('dashboards.payments.index', compact('payments'));
     }
 

@@ -20,7 +20,20 @@ class MeterReadingsController extends Controller
 
     public function index()
     {
-        $readings = MeterReadings::with('meter.villager.user')->paginate(10);
+         
+
+        $user = Auth::user();
+
+        if ($user->role == 'villager') {
+            $villagerId = $user->villager?->id;
+
+            $readings = MeterReadings::with('meter.villager.user')
+                ->whereHas('meter.villager', function ($query) use ($villagerId) {
+                    $query->where('villager_id', $villagerId);
+                })->paginate(10);
+        } else {
+            $readings = MeterReadings::with('meter.villager.user')->paginate(10);
+        }
         return view('dashboards.readings.index', compact('readings'));
     }
 
