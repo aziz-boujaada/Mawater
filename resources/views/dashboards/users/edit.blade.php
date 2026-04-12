@@ -42,13 +42,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-<body class="font-dm bg-deep min-h-screen flex items-center justify-center px-4 py-10">
-
-    <div class="animate-slideUp w-full max-w-4xl flex rounded-3xl shadow-2xl overflow-hidden">
+<body class="font-dm bg-white min-h-screen flex items-center justify-center px-4 py-10">
+   @include('components.side-bar' , ['active' => 'users'])
+    <div class="animate-slideUp  max-w-2xl flex rounded-3xl shadow-2xl overflow-hidden">
 
 
         {{-- FORM CARD --}}
-        <div class="flex-1 bg-white p-10 relative overflow-y-auto">
+        <div class="flex-1 bg-white p-10 relative  overflow-y-auto">
 
             {{-- Top accent bar --}}
             <div class="absolute top-0 left-8 right-8 h-[3px] bg-gradient-to-r from-teal to-light rounded-b-md"></div>

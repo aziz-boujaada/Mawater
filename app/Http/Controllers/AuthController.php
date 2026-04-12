@@ -53,7 +53,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return redirect()->route('login')->with('success', 'Registration successful! Please login.');
+        return redirect()->route('users')->with('success', 'Registration new User successful');
     }
 
     /**
