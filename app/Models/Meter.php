@@ -19,7 +19,7 @@ class Meter extends Model
         return $this->belongsTo(Villager::class, 'villager_id');
     }
 
-    public function metterReadings()
+    public function meterReadings()
     {
         return $this->hasMany(MeterReadings::class, 'meter_id');
     }

@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\MeterReadings;
 use App\Services\StoreInvoiceService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -15,7 +16,18 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with('reading.meter.villager')->paginate(10);
+        $user = Auth::user();
+
+        if ($user->role == 'villager') {
+            $villagerId = $user->villager?->id;
+
+            $invoices = Invoice::with('reading.meter.villager')
+                ->whereHas('reading.meter', function ($query) use ($villagerId) {
+                    $query->where('villager_id', $villagerId);
+                })->paginate(10);
+        } else {
+            $invoices = Invoice::with('reading.meter.villager')->paginate(10);
+        }
 
         return view('dashboards.invoices.index', compact('invoices'));
     }
@@ -26,8 +38,8 @@ class InvoiceController extends Controller
     public function create()
     {
         $readings = MeterReadings::with('meter')->doesntHave('invoice')->get();
-       
-        return view('invoices.create', compact('readings'));
+
+        return view('dashboards.invoices.create', compact('readings'));
     }
 
     /**

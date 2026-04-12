@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Meter;
 use App\Models\MeterReadings;
 use App\Models\Payment;
 use App\Models\Repair;
 use App\Services\AdminStatisticsDashboardService;
+use App\Services\VillagerStatisticsDashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,7 +78,6 @@ class DashboardsController extends Controller
      */
     public function repair_agent()
     {
-        $repairAgentId = Auth::id();
 
         $repairsCount = Repair::count();
 
@@ -105,35 +106,29 @@ class DashboardsController extends Controller
         ));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function villager(VillagerStatisticsDashboard $villagerStats)
     {
-        //
-    }
+        $villager_id = Auth::user()->villager?->id;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $meters = $villagerStats->getReadingsOfVillager($villager_id);
+        $invoices = $villagerStats->getInvoicesOfVillager($villager_id);
+        $payments = $villagerStats->getPaymentsOfVillager($villager_id);
+        $readingsCount = $villagerStats->getTotalReadings($villager_id);
+        $invoicesCount = $villagerStats->getTotalInvoices($villager_id);
+        $paidInvoicesCount = $villagerStats->getTotalPaidInvoices($villager_id);
+        $totalAmountPaid = $villagerStats->getPaidAmount($villager_id);
+        $remainingAmount = $villagerStats->getUnpaidAmount($villager_id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('dashboards.villager', compact(
+            'meters',
+            'invoices',
+            'payments',
+            'readingsCount',
+            'invoicesCount',
+            'paidInvoicesCount',
+            'totalAmountPaid',
+            'remainingAmount'
+        ));
     }
 }
