@@ -106,6 +106,18 @@
                         <p class="text-xs text-gray-400 mt-1">Paid invoices</p>
                     </div>
 
+                        {{-- UnPaid Invoices --}}
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center">
+                                <i class="fa-solid fa-circle-check text-red-500"></i>
+                            </div>
+                            <span class="text-xs text-gray-400 font-medium">UnPaid</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">{{ $unPaidInvoicesCount }}</h3>
+                        <p class="text-xs text-gray-400 mt-1">UnPaid invoices</p>
+                    </div>
+
                     {{-- Total Paid Amount --}}
                     <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                         <div class="flex items-start justify-between mb-4">

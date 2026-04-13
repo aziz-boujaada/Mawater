@@ -116,6 +116,7 @@ class DashboardsController extends Controller
         $payments = $villagerStats->getPaymentsOfVillager($villager_id);
         $readingsCount = $villagerStats->getTotalReadings($villager_id);
         $invoicesCount = $villagerStats->getTotalInvoices($villager_id);
+        $unPaidInvoicesCount = $villagerStats->getTotalunPaidInvoices($villager_id);
         $paidInvoicesCount = $villagerStats->getTotalPaidInvoices($villager_id);
         $totalAmountPaid = $villagerStats->getPaidAmount($villager_id);
         $remainingAmount = $villagerStats->getUnpaidAmount($villager_id);
@@ -127,6 +128,7 @@ class DashboardsController extends Controller
             'readingsCount',
             'invoicesCount',
             'paidInvoicesCount',
+            'unPaidInvoicesCount',
             'totalAmountPaid',
             'remainingAmount'
         ));

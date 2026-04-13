@@ -61,6 +61,15 @@ class   VillagerStatisticsDashboard
             ->count();
     }
 
+      public function getTotalunPaidInvoices($villager_id)
+    {
+        return  Invoice::with(['reading.meter', 'payments'])
+            ->whereHas('reading.meter', function ($query) use ($villager_id) {
+                $query->where('villager_id', $villager_id);
+            })->where('status', 'unpaid')
+            ->count();
+    }
+
     public function getTotalAmountOfInvoices($villager_id)
     {
         return  Invoice::with(['reading.meter', 'payments'])
