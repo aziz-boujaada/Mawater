@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Meter;
 use App\Models\MeterReadings;
 use Carbon\Carbon;
 use Exception;
@@ -54,18 +55,41 @@ class StoreReadingService
             }
    }
 
+
+   // add automatic reading when meter is broken based for avareg of consumption 
+
+   public static function AutomtaicReading($meter_id){
+      $meter = Meter::find($meter_id);
+      $sumOfReadings = MeterReadings::where('meter_id' , $meter_id)->sum('current_reading');
+      $countOfReadings = MeterReadings::where('meter_id' , $meter_id)->count();
+
+
+      if(!$meter && $meter->status != "broken"){
+         return null ; 
+      }
+
+      if($countOfReadings == 0) return null ; 
+      return $sumOfReadings / $countOfReadings ; 
+   }
+
    public static function storeReading($reading_data)
    {
       self::checkDuplicateReading($reading_data);
       $previous_reading  = self::getPreviousReading($reading_data['meter_id']);
       $consumption = self::calculateConsumpation($reading_data, $previous_reading);
-
-
+      $averageComnsumption = self::AutomtaicReading($reading_data['meter_id']);
+    
+      if($averageComnsumption != null){
+         $consumption = $averageComnsumption ;
+         $current_reading = $previous_reading;
+      }else{
+         $current_reading = $reading_data['current_reading'] ;
+      }
 
       $reading = MeterReadings::create([
          'meter_id' => $reading_data['meter_id'],
          'previous_reading' => $previous_reading,
-         'current_reading' => $reading_data['current_reading'],
+         'current_reading' => $current_reading,
          'consumption' => $consumption,
          'reading_date' => $reading_data['reading_date']
       ]);
