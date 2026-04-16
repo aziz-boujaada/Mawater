@@ -64,7 +64,7 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        $invoice = Invoice::with('reading.meter.villager')->where('id', $id)->first();
+        $invoice = Invoice::with(['reading.meter.villager' , 'payments'])->where('id', $id)->first();
 
         return view('dashboards.invoices.show', compact('invoice'));
     }

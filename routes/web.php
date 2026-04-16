@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['admin'])->group(function () {
         Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
         Route::post('/register', [AuthController::class, 'register'])->name('register.store');
-        Route::get('/dashboard/admin', [DashboardsController::class, 'admin'])->name('dashboard.admin');
+        Route::get('admin/dashboard', [DashboardsController::class, 'admin'])->name('dashboard.admin');
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/show/{id}', [UserController::class, 'showUser'])->name('user.show');
         Route::get('/users/edit/{id}', [UserController::class, 'editUser'])->name('user.edit');
@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
         // Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
         // Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
-        // Route::get('/reading/show/{id}', [InvoiceController::class, 'show'])->name('reading.show');
+        // Route::get('/reading/show/{reading}', [InvoiceController::class, 'show'])->name('reading.show');
 
 
 
@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
     // collector 
     Route::middleware(['collector'])->group(function () {
-        Route::get('/dashboard/collector', [DashboardsController::class, 'collector'])->name('dashboard.collector');
+        Route::get('collector/dashboard', [DashboardsController::class, 'collector'])->name('dashboard.collector');
     });
 
     /// collector and admin 
@@ -62,7 +62,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
         Route::get('/reading/create', [MeterReadingsController::class, 'create'])->name('reading.create');
         Route::post('/reading/store', [MeterReadingsController::class, 'store'])->name('reading.store');
-        Route::get('/reading/show/{id}', [InvoiceController::class, 'show'])->name('reading.show');
+        Route::get('/reading/show/{reading}', [MeterReadingsController::class, 'show'])->name('reading.show');
 
         Route::get('/meters', [MetersController::class, 'index'])->name('meters');
         Route::get('/meter/create', [MetersController::class, 'create'])->name('meter.create');
@@ -80,12 +80,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
         Route::get('payments/create', [PaymentController::class, 'create'])->name('payments.create');
         Route::post('payments/store', [PaymentController::class, 'store'])->name('payments.store');
+        Route::get('/payments/show/{id}', [PaymentController::class, 'show'])->name('payments.show');
     });
 
     /// repair agent 
 
     Route::middleware(['role:repair_agent,admin'])->group(function () {
-        Route::get('/dashboard/repair-agent', [DashboardsController::class, 'repair_agent'])->name('dashboard.repair_agent');
+        Route::get('repair_agent/dashboard', [DashboardsController::class, 'repair_agent'])->name('dashboard.repair_agent');
         Route::get('repairs', [RepairController::class, 'index'])->name('repairs');
         Route::get('repairs/create', [RepairController::class, 'create'])->name('repairs.create');
         Route::post('repairs/store', [RepairController::class, 'store'])->name('repairs.store');
@@ -93,16 +94,17 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // villager
-
+    // Route::middleware()
     Route::middleware(['role:villager,admin,collector'])->group(function () {
-        Route::get('dashboard/villager', [DashboardsController::class, 'villager'])->name('dashboard.villager');
+        Route::get('villager/dashboard', [DashboardsController::class, 'villager'])->name('dashboard.villager');
 
         Route::get('/readings', [MeterReadingsController::class, 'index'])->name('readings');
-        Route::get('/reading/show/{id}', [InvoiceController::class, 'show'])->name('reading.show');
+        Route::get('/reading/show/{reading}', [MeterReadingsController::class, 'show'])->name('reading.show');
 
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices');
         Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 
         Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
+        Route::get('/payments/show/{id}', [PaymentController::class, 'show'])->name('payments.show');
     });
 });

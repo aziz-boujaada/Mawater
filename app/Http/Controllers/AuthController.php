@@ -33,16 +33,16 @@ class AuthController extends Controller
     public function register(StoreUserRequest $request)
     {
         $data = $request->validated();
-        
-  
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'role' => $data['role'],
-                'phone' => $data['phone']
-            ]);
-        
+
+
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'role' => $data['role'],
+            'phone' => $data['phone']
+        ]);
+
 
         if ($data['role'] == 'villager') {
             Villager::create([
@@ -62,12 +62,23 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $data = $request->only('email', 'password');
-        
+
         if (!Auth::attempt($data)) {
             return redirect()->back()->withErrors(['email' => 'Invalid email or password']);
         }
 
-        return redirect()->route('dashboard.admin')->with('success', 'You are logged in successfully!');
+        $user_role = Auth::user()->role;
+        if ($user_role == 'admin') {
+            return redirect()->route('dashboard.admin')->with('success', 'You are logged in successfully!');
+        } elseif ($user_role == 'collector') {
+            return redirect()->route('dashboard.collector')->with('success', 'You are logged in successfully!');
+        }elseif ($user_role == 'repair_agent') {
+            return redirect()->route('dashboard.repair_agent')->with('success', 'You are logged in successfully!');
+        }elseif ($user_role == 'villager') {
+            return redirect()->route('dashboard.villager')->with('success', 'You are logged in successfully!');
+        }else{
+            return redirect()->route('home');
+        }
     }
 
     /**
