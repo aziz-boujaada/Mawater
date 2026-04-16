@@ -51,13 +51,13 @@ class MeterReadingsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMeterReadings $request)
+    public function store(StoreMeterReadings $request , StoreReadingService $storeReadingService)
     {
 
         $user_role = Auth::user()->role;
         try {
             $reading_data = $request->validated();
-            StoreReadingService::storeReading($reading_data);
+            $storeReadingService->storeReading($reading_data);
             if ($user_role == 'collector') {
                 return redirect()->route('dashboard.collector')->with('success', "Reading created with success");
             }
@@ -72,10 +72,12 @@ class MeterReadingsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MeterReadings $meterReadings)
-    {
-        //
-    }
+   public function show(MeterReadings $reading)
+{
+    $reading->load(['meter.villager.user']);
+
+    return view('dashboards.readings.show', compact('reading'));
+}
 
     /**
      * Show the form for editing the specified resource.

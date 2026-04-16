@@ -4,15 +4,16 @@ namespace App\Services;
 
 use App\Models\Meter;
 use App\Models\MeterReadings;
+use App\Repositories\ReadingRepository;
 use Carbon\Carbon;
 use Exception;
 
 class StoreReadingService
 {
 
-
+   public function __construct(protected ReadingRepository $readingRepository) {}
    // give the last current reading to set as previous to register a new reading 
-   public static function  getPreviousReading($meter_id)
+   public function  getPreviousReading($meter_id)
    {
 
       $previous_reading = MeterReadings::where('meter_id', $meter_id)
@@ -24,7 +25,7 @@ class StoreReadingService
 
    // calculate cinsumption and check if urrent reading greater than previous  befor calcul
 
-   public static function calculateConsumpation($reading_data, $previous_reading)
+   public function calculateConsumpation($reading_data, $previous_reading)
    {
       $consumption = 0;
 
@@ -37,7 +38,7 @@ class StoreReadingService
    }
 
    // check if raeding not suplicate at same month 
-   public static function checkDuplicateReading($reading_data):void
+   public function checkDuplicateReading($reading_data): void
    {
 
       $date = Carbon::parse($reading_data['reading_date']);
@@ -49,51 +50,44 @@ class StoreReadingService
       // if ($date->month < Carbon::now()->month) {
       //    throw new \Exception('You cant set a old date  ');
       // }
-      
-            if ($monthHasRecord) {
-               throw new \Exception('You already add readings of this month');
-            }
+
+      if ($monthHasRecord) {
+         throw new \Exception('You already add readings of this month');
+      }
    }
 
 
    // add automatic reading when meter is broken based for avareg of consumption 
 
-   public static function AutomtaicReading($meter_id){
+   public function AutomtaicReading($meter_id)
+   {
       $meter = Meter::find($meter_id);
-      $sumOfReadings = MeterReadings::where('meter_id' , $meter_id)->sum('current_reading');
-      $countOfReadings = MeterReadings::where('meter_id' , $meter_id)->count();
+      $sumOfConsumption = MeterReadings::where('meter_id', $meter_id)->sum('consumption');
+      $countOfReadings = MeterReadings::where('meter_id', $meter_id)->count();
 
 
-      if(!$meter && $meter->status != "broken"){
-         return null ; 
+      if (!$meter && $meter->status != "broken") {
+         return null;
       }
 
-      if($countOfReadings == 0) return null ; 
-      return $sumOfReadings / $countOfReadings ; 
+      if ($countOfReadings == 0) return null;
+      return $sumOfConsumption / $countOfReadings;
    }
 
-   public static function storeReading($reading_data)
+   public function storeReading($reading_data)
    {
-      self::checkDuplicateReading($reading_data);
-      $previous_reading  = self::getPreviousReading($reading_data['meter_id']);
-      $consumption = self::calculateConsumpation($reading_data, $previous_reading);
-      $averageComnsumption = self::AutomtaicReading($reading_data['meter_id']);
-    
-      if($averageComnsumption != null){
-         $consumption = $averageComnsumption ;
+      $this->checkDuplicateReading($reading_data);
+      $previous_reading  = $this->getPreviousReading($reading_data['meter_id']);
+      $consumption = $this->calculateConsumpation($reading_data, $previous_reading);
+      $averageComnsumption = $this->AutomtaicReading($reading_data['meter_id']);
+
+      if ($averageComnsumption != null) {
+         $consumption = $averageComnsumption;
          $current_reading = $previous_reading;
-      }else{
-         $current_reading = $reading_data['current_reading'] ;
+      } else {
+         $current_reading = $reading_data['current_reading'];
       }
 
-      $reading = MeterReadings::create([
-         'meter_id' => $reading_data['meter_id'],
-         'previous_reading' => $previous_reading,
-         'current_reading' => $current_reading,
-         'consumption' => $consumption,
-         'reading_date' => $reading_data['reading_date']
-      ]);
-
-      return $reading;
+      return $this->readingRepository->storeReading($reading_data, $previous_reading, $current_reading, $consumption);
    }
 }
