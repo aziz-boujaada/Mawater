@@ -105,7 +105,7 @@
                                     <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $payment->payment_date }}</td>
 
                                     <td class="px-6 py-3.5 text-right">
-                                        <a href="{{ route('reading.show', $payment->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
+                                        <a href="{{ route('payments.show', $payment->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
                                     </td>
 
                                 </tr>

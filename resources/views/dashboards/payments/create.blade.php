@@ -125,7 +125,7 @@
                                         <span>Meter Ref</span>
                                     </div>
                                     <span class="inline-flex items-center gap-1 bg-[#f4fafa] border border-[#d4e8ec] text-teal text-xs font-semibold px-2 py-0.5 rounded-full">
-                                        {{ $invoice->reading->meter->meter_reference }}
+                                        {{ $invoice->reading?->meter?->meter_reference }}
                                     </span>
                                 </div>
 
@@ -136,9 +136,9 @@
                                     </div>
                                     <div class="flex items-center gap-1.5">
                                         <div class="w-5 h-5 rounded-full bg-gradient-to-br from-mid to-light flex items-center justify-center text-white text-[0.6rem] font-bold shrink-0">
-                                            {{ strtoupper(substr($invoice->reading->meter->villager->user->name, 0, 1)) }}
+                                            {{ strtoupper(substr($invoice->reading?->meter?->villager->user->name, 0, 1)) }}
                                         </div>
-                                        <span class="text-gray-700 font-medium text-xs">{{ $invoice->reading->meter->villager->user->name }}</span>
+                                        <span class="text-gray-700 font-medium text-xs">{{ $invoice->reading?->meter?->villager->user->name }}</span>
                                     </div>
                                 </div>
 
@@ -155,7 +155,7 @@
                                         <i class="fa-solid fa-droplet w-3 text-center text-light"></i>
                                         <span>Consumption</span>
                                     </div>
-                                    <span class="text-gray-700 text-xs font-medium">{{ $invoice->reading->consumption }} m³</span>
+                                    <span class="text-gray-700 text-xs font-medium">{{ $invoice->reading?->consumption }} m³</span>
                                 </div>
 
                                 @php

@@ -155,6 +155,47 @@
                             </div>
 
                         </div>
+
+                        <div class="px-6 py-5">
+                            <h3 class="font-syne font-bold text-deep text-sm mb-4">
+                                Payments History
+                            </h3>
+
+                            <div class="space-y-3">
+
+                                @forelse($invoice->payments as $payment)
+                                <div class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 hover:bg-gray-100 transition">
+
+                                    {{-- Left side --}}
+                                    <div class="flex items-center gap-3">
+
+                                        <div>
+                                            <p class="text-xs text-gray-400">Payment #{{ $payment->id }}</p>
+                                            <p class="text-sm font-semibold text-gray-700">
+                                                {{ number_format($payment->amount_paid, 2) }} DH
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {{-- Right side --}}
+                                    <div class="text-right">
+                                        <p class="text-xs text-gray-400">Date</p>
+                                        <p class="text-sm text-gray-600 font-medium">
+                                            {{ $payment->payment_date ?? '—' }}
+                                        </p>
+                                    </div>
+
+                                </div>
+                                @empty
+                                <div class="text-center py-6">
+                                    <i class="fa-solid fa-circle-info text-gray-300 text-2xl mb-2"></i>
+                                    <p class="text-sm text-gray-400">No payments found</p>
+                                </div>
+                                @endforelse
+                               
+
+                            </div>
+                        </div>
                     </div>
 
                 </div>

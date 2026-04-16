@@ -127,11 +127,11 @@
             <li><a href="#features" class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium px-4 py-2 rounded-lg transition-all">Features</a></li>
             <li><a href="#how"      class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium px-4 py-2 rounded-lg transition-all">How It Works</a></li>
             <li><a href="#contact"  class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium px-4 py-2 rounded-lg transition-all">Contact</a></li>
-
+           @php $role = Auth::user()->role @endphp
             @if (Route::has('login'))
                 @auth
                     <li>
-                        <a href="{{ url('/dashboard') }}"
+                        <a href="{{ url($role .'/dashboard')}}"
                            class="ml-2 text-sm font-semibold text-white px-5 py-2 rounded-lg transition-all hover:-translate-y-px"
                            style="background:linear-gradient(135deg,#249E94,#3BC1A8);box-shadow:0 2px 14px rgba(59,193,168,.4);">
                             Dashboard

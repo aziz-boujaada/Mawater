@@ -113,7 +113,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-3.5 text-right">
-                                        <a href="{{ route('reading.show', $reading->id) }}" class="inline-flex items-center gap-1.5 text-xs text-mid font-semibold hover:underline">
+                                        <a href="{{ route('reading.show', $reading) }}" class="inline-flex items-center gap-1.5 text-xs text-mid font-semibold hover:underline">
                                             <i class="fa-solid fa-eye"></i> View
                                         </a>
                                     </td>
