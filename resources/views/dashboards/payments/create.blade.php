@@ -30,7 +30,7 @@
 <body class="font-dm bg-gray-50 text-gray-800">
     <div class="flex min-h-screen">
 
-         @include('components.side-bar' , ['active' => 'payments'])
+        @include('components.side-bar' , ['active' => 'payments'])
         {{-- MAIN --}}
         <div class="ml-56 flex-1 flex flex-col min-w-0 ">
 
@@ -62,13 +62,7 @@
             {{-- CONTENT --}}
             <main class="flex-1 p-6 space-y-10">
 
-                {{-- Session error --}}
-                @if(session('error'))
-                <div class="resposns_message absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-red-50 border border-red-200 p-4 rounded-xl text-red-700 shadow-lg flex items-center gap-2">
-                    <i class="fa-solid fa-circle-exclamation text-red-400 shrink-0"></i>
-                    {{ session('error') }}
-                </div>
-                @endif
+
 
                 @foreach ($collectors as $collector)
 
@@ -191,17 +185,18 @@
                                     <input type="hidden" name="invoice_id" value="{{ $invoice->id }}">
 
                                     @if ($invoice->total_amount > 0)
-                                    
+
                                     {{-- Submit / Already Paid --}}
                                     @if ($remaining > 0)
                                     <div class="">
-                                        <input type="number" name="amount_paid" placeholder="Amount to pay e.g. 10"
+                                        <label for="amount_to_paid" class="flex items-center gap-2 text-gray-400 text-md pb-1">Amount To pay</label>
+                                        <input type="number" name="amount_paid" placeholder="Amount to pay e.g. 10" step="0.01" min="0"
                                             class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-2.5 text-sm text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
                                     </div>
                                     <button type="submit"
                                         class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-sm py-2.5 rounded-xl shadow-sm shadow-light/20 hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 transition-all duration-150">
                                         <i class="fa-solid fa-circle-check text-xs"></i>
-                                        Mark as Paid
+                                        Pay
                                     </button>
                                     @else
                                     <div class="w-full flex items-center justify-center gap-2 bg-gray-200 text-gray-500 font-syne font-bold text-sm py-2.5 rounded-xl cursor-not-allowed">
@@ -222,30 +217,26 @@
                 </div>
 
                 @endforeach
-
+                <div id="response_messgaes">
+                    @if(session('error'))
+                    <div class="response_messgaes absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-red-50 border border-red-200 p-4 rounded-xl text-red-700 shadow-lg flex items-center gap-2">
+                        _ {{ session('error') }}
+                    </div>
+                    @elseif(session('success'))
+                <div class="response_messgaes absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-green-50 border border-green-200 p-4 rounded-xl text-green-700 shadow-lg flex items-center gap-2">
+                        _ {{ session('success') }}
+                    </div>
+                    @endif
+                </div>
+               
             </main>
 
 
 
 
             <script>
-                // function toggleStatusPaidFields(selectElement) {
-                //     const form = selectElement.closest('form');
-                //     const fields = form.querySelector('.partialFields');
-                //     const input = fields.querySelector('input');
-
-                //     const isPartial = selectElement.value === "partial";
-
-                //     fields.classList.toggle("hidden", !isPartial);
-                //     input.disabled = !isPartial;
-
-                //     if (!isPartial) {
-                //         input.value = '';
-                //     }
-                // }
-
                 const hideresponsMessage = () => {
-                    const respons_msg = document.querySelector('.resposns_message')
+                    const respons_msg = document.getElementById('response_messgaes')
                     if (respons_msg) {
                         setTimeout(() => {
                             respons_msg.classList.add('hidden');
@@ -254,10 +245,7 @@
 
                 }
                 document.addEventListener('DOMContentLoaded', () => {
-                    document.querySelectorAll('select[name="status"]').forEach(select => {
-                        toggleStatusPaidFields(select);
-                        hideresponsMessage()
-                    });
+                    hideresponsMessage()
                 });
             </script>
 </body>

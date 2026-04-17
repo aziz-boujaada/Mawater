@@ -69,23 +69,46 @@
             <!-- # region -->
             {{-- Villager --}}
             <div class="space-y-1.5">
-                <label class="block text-[0.72rem] font-semibold uppercase tracking-widest text-deep">Villager</label>
-                <select name="meter_id"
-                    class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none
-               focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
-                    <option value="" disabled selected>Select a villager…</option>
+                <div class="space-y-1.5">
+                    <label class="block text-[0.72rem] font-semibold uppercase tracking-widest text-deep">
+                        Meter
+                    </label>
 
-                    @foreach($meter_of->groupBy(fn($meter) => $meter->villager->id) as $villagerId => $meters)
-                    <optgroup label="{{ $meters->first()->villager->user->name }}">
-                        @foreach($meters as $meter)
-                        <option value="{{ $meter->id }}">
-                            Meter: {{ mb_substr($meter->meter_reference, 0, 10) }}
-                        </option>
+                    <select name="meter_id" id="meterSelect"
+                        class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none
+        appearance-none focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
+
+                        <option value="" disabled selected>Select a meter…</option>
+
+                        @foreach($meter_of->groupBy(fn($meter) => $meter->villager->id) as $villagerId => $meters)
+                        <optgroup label="{{ $meters->first()->villager->user->name }}">
+
+                            @foreach($meters as $meter)
+                            <option
+                                value="{{ $meter->id }}"
+                                data-status="{{ $meter->status }}">
+                                Meter: {{ mb_substr($meter->meter_reference, 0, 10) }}
+                            </option>
+                            @endforeach
+
+                        </optgroup>
                         @endforeach
-                    </optgroup>
-                    @endforeach
 
-                </select>
+                    </select>
+
+                    {{-- MESSAGE --}}
+                    <div id="brokenMessage"
+                        class="hidden mt-3 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>
+                                This meter is broken — consumption will be calculated using average system.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
 
 
@@ -98,7 +121,7 @@
                            focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
             </div>
 
-            {{-- Installation Date --}}
+            {{-- reading Date --}}
             <div class="space-y-1.5">
                 <label for="reading_date" class="block text-[0.72rem] font-semibold uppercase tracking-widest text-deep">Reading Date</label>
                 <input type="date" id="reading_date" name="reading_date"
@@ -132,8 +155,24 @@
             @endif
 
         </form>
+
     </div>
 
 </body>
+<script>
+    const select = document.getElementById('meterSelect');
+    const message = document.getElementById('brokenMessage');
+
+    select.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const status = selectedOption.getAttribute('data-status');
+
+        if (status === 'broken') {
+            message.classList.remove('hidden');
+        } else {
+            message.classList.add('hidden');
+        }
+    });
+</script>
 
 </html>

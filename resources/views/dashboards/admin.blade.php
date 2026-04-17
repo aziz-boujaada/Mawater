@@ -103,8 +103,8 @@
         {{-- PAGE BODY --}}
         <main class="flex-1 p-6 space-y-6 animate-fadeIn">
 
-            {{-- ── STAT CARDS ── --}}
-            {{-- ── STAT CARDS ── --}}
+            {{-- ── mo$monthPayment CARDS ── --}}
+            {{-- ── mo$monthPayment CARDS ── --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
                 {{-- Total Users --}}
@@ -147,7 +147,7 @@
                     <p class="text-xs text-gray-400 mt-0.5">Amount loses In Repairs</p>
                 </div>
 
-                 {{-- Profit  Budget --}}
+                {{-- Profit  Budget --}}
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                     <div class="flex items-start justify-between mb-4">
                         <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
@@ -203,8 +203,79 @@
                 </div>
 
             </div>
-         
+            <div class="max-w-6xl  p-6 space-y-6">
 
+                {{-- TITLE --}}
+                <h1 class="text-2xl font-bold text-gray-800">
+                    Monthly Payments Statistics
+                </h1>
+
+                {{-- FLEX SECTION --}}
+                <div class="flex flex-col lg:flex-row gap-6">
+
+                    {{-- CHART (smaller card) --}}
+                    <div class="bg-white p-4 rounded-xl shadow flex-1">
+                        <canvas id="paymentsChart" height="120"></canvas>
+                    </div>
+
+                    {{-- QUICK STATS (optional but nice) --}}
+                    <div class="bg-white p-4 rounded-xl shadow w-full lg:w-1/3">
+                        <h2 class="font-semibold text-gray-700 mb-3">Summary</h2>
+
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Total Months</span>
+                                <span class="font-bold">{{ $monthlyPayments->count() }}</span>
+                            </div>
+
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Total Revenue</span>
+                                <span class="font-bold text-green-600">
+                                    {{ number_format($monthlyPayments->sum('total'), 2) }} DH
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- TABLE --}}
+                <div class="bg-white rounded-xl shadow overflow-hidden">
+
+                    <div class="p-4 border-b">
+                        <h2 class="font-semibold text-gray-700">
+                            Monthly Breakdown
+                        </h2>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-100 text-left text-gray-600">
+                                <tr>
+                                    <th class="p-3">Month</th>
+                                    <th class="p-3">Total Payments</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach($monthlyPayments as $monthPayment)
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">
+                                        {{ $monthPayment->month }}
+                                    </td>
+                                    <td class="p-3 font-semibold text-green-600">
+                                        {{ number_format($monthPayment->total, 2) }} DH
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+                
+
+            </div>
         </main>
 
         {{-- FOOTER --}}
@@ -213,7 +284,7 @@
         </footer>
     </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function toggleSidebar() {
             const sb = document.getElementById('sidebar');
@@ -221,6 +292,24 @@
             sb.classList.toggle('-translate-x-full');
             ov.classList.toggle('hidden');
         }
+
+        const ctx = document.getElementById('paymentsChart');
+        const chartData = @json($monthlyPayments);
+        console.log(chartData);
+        const labels = chartData.map(i => i.month);
+        const data = chartData.map(i => Number(i.total));
+
+        new Chart(document.getElementById('paymentsChart'), {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Payments (DH)',
+                    data,
+                    backgroundColor: '#0C7779'
+                }]
+            }
+        });
     </script>
 
 </body>

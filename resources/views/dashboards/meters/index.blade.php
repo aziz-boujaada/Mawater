@@ -145,7 +145,7 @@
 
 <script>
     const hideresponsMessage = () => {
-        const respons_msg = document.getElementById('.resposns_messages')
+        const respons_msg = document.getElementById('resposns_messages')
         if (respons_msg) {
             setTimeout(() => {
                 respons_msg.classList.add('hidden');
