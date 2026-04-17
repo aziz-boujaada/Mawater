@@ -33,6 +33,7 @@ class DashboardsController extends Controller
         $profitMargin = $statsService->getProfitMargin();
         $lossPercentage = $statsService->getLossPercentage();
         $paidPercentage = $statsService->getPaidPaymentsPercentage();
+        $monthlyPayments = $statsService->getMonthlyPaymentsStats();
 
         return view('dashboards.admin', compact([
             'total_users',
@@ -48,7 +49,8 @@ class DashboardsController extends Controller
             'netProfit',
             'profitMargin',
             'lossPercentage',
-            'paidPercentage'
+            'paidPercentage',
+            'monthlyPayments'
         ]));
     }
 

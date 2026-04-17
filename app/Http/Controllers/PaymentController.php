@@ -58,7 +58,7 @@ class PaymentController extends Controller
             $payment_data = $request->validated();
             StorePaymentService::storePayment($payment_data);
 
-            return redirect()->back()->with('success', 'payments done ');
+            return redirect()->route('payments.create')->with('success', $payment_data['amount_paid'] . ' ' . 'DH' . ' ' . 'is Paid');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

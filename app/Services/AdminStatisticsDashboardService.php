@@ -103,4 +103,17 @@ class AdminStatisticsDashboardService
 
       return $income > 0 ? ($losses / $income) * 100 : 0;
    }
+
+
+    public function getMonthlyPaymentsStats()
+    {
+        return DB::table('payments')
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw('SUM(amount_paid) as total')
+            )
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+    }
 }
