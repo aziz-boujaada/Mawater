@@ -74,7 +74,7 @@
                 </div>
 
                 {{-- BODY --}}
-                <div class="divide-y divide-gray-100">
+                <div class="divide-y divide-gray-100 p-6   ">
 
                     {{-- Meter --}}
                     <div class="flex justify-between items-center px-6 py-4">
@@ -148,8 +148,23 @@
                         </span>
                     </div>
 
+                    @if($reading->meter?->status == 'broken')
+                   <div class="mt-4 p-6 bg-red-50 border border-red-200 rounded-xl mt-8">
+                       <p class="font-semibold text-red-600">
+                           ⚠ System Notice
+                       </p>
+    
+                       <p class="text-sm text-red-500 mt-1">
+                           This meter is currently broken. Billing is based on historical average consumption.
+                       </p>
+    
+                       <p class="text-xs text-red-400 mt-2">
+                           Last update: system auto-calculation enabled
+                       </p>
+                   </div>
+                   @endif
                 </div>
-
+                
             </div>
 
         </main>

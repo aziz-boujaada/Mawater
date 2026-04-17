@@ -49,9 +49,9 @@
 
         {{-- ── MAIN ── --}}
         <main class="flex items-center justify-center p-6">
-            <div class="max-w-2xl space-y-4">
+            <div class="w-full max-w-5xl space-y-4">
 
-                {{-- Top status banner --}}
+                {{-- Status banner --}}
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center"
@@ -66,10 +66,8 @@
                         </div>
                     </div>
 
-                    {{-- Payment status badge --}}
-                    @php
-                        $remaining = $payment->invoice?->remaining_amount ?? 0;
-                    @endphp
+                    @php $remaining = $payment->invoice?->remaining_amount ?? 0; @endphp
+
                     @if($remaining <= 0)
                         <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1 rounded-full bg-green-50 text-green-600 border border-green-100">
                             <i class="fa-solid fa-circle-check text-[10px]"></i>
@@ -83,7 +81,7 @@
                     @endif
                 </div>
 
-                {{-- Main details card --}}
+                {{-- Payment Info card --}}
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
                     <div class="px-6 py-3.5 border-b border-gray-50">
@@ -95,7 +93,6 @@
 
                     <div class="divide-y divide-gray-50">
 
-                        {{-- Payment ID --}}
                         <div class="flex items-center justify-between px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center">
@@ -108,7 +105,6 @@
                             </p>
                         </div>
 
-                        {{-- Invoice ID --}}
                         <div class="flex items-center justify-between px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-7 h-7 rounded-lg bg-[#f4fafa] flex items-center justify-center">
@@ -122,7 +118,6 @@
                             </span>
                         </div>
 
-                        {{-- Collector --}}
                         <div class="flex items-center justify-between px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center">
@@ -135,7 +130,6 @@
                             </p>
                         </div>
 
-                        {{-- Payment Date --}}
                         <div class="flex items-center justify-between px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center">
@@ -149,7 +143,7 @@
                     </div>
                 </div>
 
-                {{-- Financial summary card --}}
+                {{-- Financial Summary card --}}
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
                     <div class="px-6 py-3.5 border-b border-gray-50">
@@ -161,37 +155,34 @@
 
                     <div class="grid grid-cols-3 divide-x divide-gray-50">
 
-                        {{-- Invoice Total --}}
                         <div class="px-6 py-5 text-center">
                             <div class="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center mx-auto mb-2">
                                 <i class="fa-solid fa-file-invoice-dollar text-gray-400 text-xs"></i>
                             </div>
                             <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider mb-1">Invoice Total</p>
-                            <p class="font-syne font-bold text-deep text-lg">
+                            <p class="font-syne font-bold text-deep text-xl">
                                 {{ number_format($payment->invoice?->total_amount ?? 0, 2) }}
                                 <span class="text-xs font-normal text-gray-400">DH</span>
                             </p>
                         </div>
 
-                        {{-- Amount Paid --}}
                         <div class="px-6 py-5 text-center">
                             <div class="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center mx-auto mb-2">
                                 <i class="fa-solid fa-circle-check text-green-500 text-xs"></i>
                             </div>
                             <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider mb-1">Amount Paid</p>
-                            <p class="font-syne font-bold text-green-600 text-lg">
+                            <p class="font-syne font-bold text-green-600 text-xl">
                                 {{ number_format($payment->amount_paid, 2) }}
                                 <span class="text-xs font-normal text-gray-400">DH</span>
                             </p>
                         </div>
 
-                        {{-- Remaining --}}
                         <div class="px-6 py-5 text-center">
                             <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center mx-auto mb-2">
                                 <i class="fa-solid fa-circle-exclamation text-red-400 text-xs"></i>
                             </div>
                             <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider mb-1">Remaining</p>
-                            <p class="font-syne font-bold text-red-500 text-lg">
+                            <p class="font-syne font-bold text-red-500 text-xl">
                                 {{ number_format($payment->invoice?->remaining_amount ?? 0, 2) }}
                                 <span class="text-xs font-normal text-gray-400">DH</span>
                             </p>
@@ -199,12 +190,28 @@
 
                     </div>
 
-                   
+                    {{-- Progress bar --}}
+                    @php
+                        $total = $payment->invoice?->total_amount ?? 0;
+                        $paid  = $payment->amount_paid ?? 0;
+                        $pct   = $total > 0 ? min(100, round(($paid / $total) * 100)) : 0;
+                    @endphp
+                    <div class="px-6 pb-5">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <p class="text-[10px] text-gray-400 font-medium">Payment progress</p>
+                            <p class="text-[10px] font-semibold text-mid">{{ $pct }}%</p>
+                        </div>
+                        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full"
+                                 style="width:{{ $pct }}%;background:linear-gradient(90deg,#249E94,#3BC1A8);"></div>
+                        </div>
+                    </div>
 
                 </div>
 
             </div>
         </main>
+
     </div>
 </div>
 </body>
