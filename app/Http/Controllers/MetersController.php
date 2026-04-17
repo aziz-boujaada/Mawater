@@ -19,8 +19,8 @@ class MetersController extends Controller
      */
     public function index()
     {
-       $meters = Meter::with('villager')->paginate(10);
-       return view('dashboards.meters.index' , compact('meters'));
+        $meters = Meter::with('villager')->paginate(10);
+        return view('dashboards.meters.index', compact('meters'));
     }
 
     /**
@@ -28,8 +28,8 @@ class MetersController extends Controller
      */
     public function create()
     {
-         $villagers = Villager::all();
-         return  view('dashboards.meters.create' , compact('villagers'));
+        $villagers = Villager::all();
+        return  view('dashboards.meters.create', compact('villagers'));
     }
 
     /**
@@ -40,15 +40,22 @@ class MetersController extends Controller
         $meterData = $request->validated();
         $meter = StoreMeterService::storeMeter($meterData);
 
-        return redirect()->route('dashboard.admin')->with('success' , "Meter with refernce {$meter->reference} created with success");
+        return redirect()->route('dashboard.admin')->with('success', "Meter with refernce {$meter->reference} created with success");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Meter $meters)
+
+
+    public function show($id)
     {
-        //
+        $meter = Meter::with([
+            'villager.user',
+            'meterReadings'
+        ])->findOrFail($id);
+
+        return view('dashboards.meters.show', compact('meter'));
     }
 
     /**
@@ -57,7 +64,7 @@ class MetersController extends Controller
     public function edit(string $id)
     {
 
-        return view('dashboards.meters.edit' , compact('id'));
+        return view('dashboards.meters.edit', compact('id'));
     }
 
     /**
@@ -67,9 +74,9 @@ class MetersController extends Controller
     {
         $meter_data = $request->validated();
         $meter = new UpdateMeterService();
-        $meter->updateMeter($meter_data , $id);
+        $meter->updateMeter($meter_data, $id);
 
-        return redirect()->route('meters')->with('success' , 'meter updated with successfully');
+        return redirect()->route('meters')->with('success', 'meter updated with successfully');
     }
 
     /**
