@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\MeterReadings;
+use App\Services\ExportInvoiceAsPdf;
 use App\Services\StoreInvoiceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,8 @@ class InvoiceController extends Controller
                     $query->where('villager_id', $villagerId);
                 })->paginate(10);
         } else {
-            $invoices = Invoice::with('reading.meter.villager')->paginate(10);
+            $collector_id = $user->id;
+            $invoices = Invoice::with('reading.meter.villager')->where('collector_id', $collector_id)->paginate(10);
         }
 
         return view('dashboards.invoices.index', compact('invoices'));
@@ -64,7 +66,7 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        $invoice = Invoice::with(['reading.meter.villager' , 'payments'])->where('id', $id)->first();
+        $invoice = Invoice::with(['reading.meter.villager', 'payments'])->where('id', $id)->first();
 
         return view('dashboards.invoices.show', compact('invoice'));
     }
@@ -72,24 +74,9 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Invoice $invoice)
+    public function exportPdf(ExportInvoiceAsPdf $exportInvoiceAsPdf, int $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Invoice $invoice)
-    {
-        //
+        $invoice = Invoice::with(['reading.meter.villager', 'payments'])->findOrFail($id);
+        return $exportInvoiceAsPdf->exportInvoicePdf($invoice);
     }
 }
