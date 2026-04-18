@@ -76,6 +76,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
         Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
         Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+        //export invoice pdf 
+        Route::get('/invoice/{id}/pdf', [InvoiceController::class, 'exportPdf'])->name('invoice.pdf');
 
         Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
         Route::get('payments/create', [PaymentController::class, 'create'])->name('payments.create');

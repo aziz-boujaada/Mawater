@@ -192,7 +192,12 @@
                                     <p class="text-sm text-gray-400">No payments found</p>
                                 </div>
                                 @endforelse
-                               
+                                <a href="{{ route('invoice.pdf', $invoice->id) }}"
+                                    class="bg-deep text-white px-4 py-4 rounded-xl text-sm flex items-center justify-center gap-2 w-full">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                    <span>Export PDF</span>
+                                </a>
+
 
                             </div>
                         </div>
