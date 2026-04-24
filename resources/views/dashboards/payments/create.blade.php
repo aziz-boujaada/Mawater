@@ -220,11 +220,11 @@
                 <div id="response_messgaes">
                     @if(session('error'))
                     <div class="response_messgaes absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-red-50 border border-red-200 p-4 rounded-xl text-red-700 shadow-lg flex items-center gap-2">
-                        _ {{ session('error') }}
+                        {{ session('error') }}
                     </div>
                     @elseif(session('success'))
                 <div class="response_messgaes absolute top-24 left-1/2 transform -translate-x-1/2 z-50 w-11/12 md:w-1/2 bg-green-50 border border-green-200 p-4 rounded-xl text-green-700 shadow-lg flex items-center gap-2">
-                        _ {{ session('success') }}
+                        {{ session('success') }}
                     </div>
                     @endif
                 </div>

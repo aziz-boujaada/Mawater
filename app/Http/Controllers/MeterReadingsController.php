@@ -62,7 +62,7 @@ class MeterReadingsController extends Controller
                 return redirect()->route('dashboard.collector')->with('success', "Reading created with success");
             }
 
-            return redirect()->route('dashboard.admin')->with('success', "Reading created with success");
+            return redirect()->route('readings')->with('success', "Reading created with success");
             
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
