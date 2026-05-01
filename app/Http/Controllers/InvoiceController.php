@@ -28,7 +28,7 @@ class InvoiceController extends Controller
                 })->paginate(10);
         } else {
             $collector_id = $user->id;
-            $invoices = Invoice::with('reading.meter.villager')->where('collector_id', $collector_id)->paginate(10);
+            $invoices = Invoice::with('reading.meter.villager')->where('collector_id', $collector_id)->orderByDesc('billing_period')->paginate(10);
         }
 
         return view('dashboards.invoices.index', compact('invoices'));

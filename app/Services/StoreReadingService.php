@@ -110,7 +110,7 @@ class StoreReadingService
          $averageComnsumption = $this->AutomtaicReading($reading_data['meter_id'], $meter);
 
          if ($averageComnsumption === null) {
-            throw new Exception('cannot calculate automatic reading (no history)');
+            throw new Exception('cannot calculate automatic reading no history');
          }
 
          $consumption = $averageComnsumption;

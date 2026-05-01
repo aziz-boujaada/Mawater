@@ -27,7 +27,7 @@ class PaymentController extends Controller
                     $query->where('villager_id', $villagerId);
                 })->paginate(10);
         } else {
-            $payments = Payment::with('invoice.reading.meter.villager')->paginate(10);
+            $payments = Payment::with('invoice.reading.meter.villager')->orderByDesc('payment_date')->paginate(10);
         }
         return view('dashboards.payments.index', compact('payments'));
     }

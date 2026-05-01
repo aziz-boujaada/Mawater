@@ -80,10 +80,8 @@
                     class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none
                            focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
                     <option value="" disabled selected>Select a status…</option>
-                    <option value="active">✅  Active</option>
-                    <option value="broken">🔴  Broken</option>
-                    <option value="repaired">🔧  Repaired</option>
-                    <option value="out_service">⚠️  Out of Service</option>
+                    <option value="active">Active</option>
+                    <option value="broken">Broken</option>
                 </select>
             </div>
 
