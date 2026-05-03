@@ -130,7 +130,7 @@
             <input type="text" name="phone" placeholder="Phone"
                 class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
 
-            <select id="role" name="role"
+              <select id="role" name="role"
                 class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition"
                 onchange="toggleVillagerFields()">
                 <option value="">Select Role</option>
