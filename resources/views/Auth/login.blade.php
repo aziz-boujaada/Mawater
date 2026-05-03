@@ -138,7 +138,7 @@
                     <li class="text-red-600 text-sm">— {{ $error }}</li>
                     @endforeach
                 </ul>
-            </div>
+             </div>
             @endif
 
         </form>
