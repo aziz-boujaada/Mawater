@@ -134,7 +134,7 @@
                 class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition"
                 onchange="toggleVillagerFields()">
                 <option value="">Select Role</option>
-                <option value="admin">Admin</option>
+                <!-- <option value="admin">Admin</option> -->
                 <option value="repair_agent">Repair Agent</option>
                 <option value="collector">Collector</option>
                 <option value="villager">Villager</option>

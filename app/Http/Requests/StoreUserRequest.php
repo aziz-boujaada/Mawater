@@ -27,7 +27,7 @@ class StoreUserRequest extends FormRequest
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'password' => ['required','string','confirmed', Password::min(8)->numbers()->letters()],
-        'role' => 'required|in:admin,collector,repair_agent,villager',
+        'role' => 'required|in:collector,repair_agent,villager',
         'phone' => 'required|string|max:15',
 
         'cin' => 'required_if:role,villager|string|max:20',
