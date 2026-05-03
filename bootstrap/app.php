@@ -6,6 +6,7 @@ use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\CollectorMiddleware;
 use App\Http\Middleware\RepairAgentMiddleware;
 use App\Http\Middleware\RoleMiddlware;
+use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VillagerMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'collector' => CollectorMiddleware::class,
             'villager' => VillagerMiddleware::class,
             'role' => RoleMiddlware::class , 
+            'trust' => TrustProxies::class
 
         ]);
     })
