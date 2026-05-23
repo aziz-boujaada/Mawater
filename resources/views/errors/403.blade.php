@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>403 — Unauthorized | Ayt Daoud</title>
+    <title>{{ __('403 — Unauthorized') }} | Ayt Daoud</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,7 +63,7 @@
                      style="background:linear-gradient(135deg,#3BC1A8,#249E94);">💧</div>
                 <div>
                     <p class="text-white font-bold text-[15px] leading-tight">Ayt Daoud</p>
-                    <p class="text-[#3BC1A8] text-[10px] font-medium tracking-widest uppercase">Water Billing System</p>
+                    <p class="text-[#3BC1A8] text-[10px] font-medium tracking-widest uppercase">{{ __('Water Billing System') }}</p>
                 </div>
             </a>
 
@@ -74,18 +74,18 @@
                         <a href="{{ url('/dashboard/collector') }}"
                            class="text-sm font-semibold text-white px-5 py-2 rounded-lg transition-all hover:-translate-y-px"
                            style="background:linear-gradient(135deg,#249E94,#3BC1A8);box-shadow:0 2px 14px rgba(59,193,168,.4);">
-                            Dashboard
+                            {{ __('Dashboard') }}
                         </a>
                     @else
                         <a href="{{ route('login') }}"
                            class="text-white/70 hover:text-white hover:bg-white/10 text-sm font-medium px-4 py-2 rounded-lg transition-all">
-                            Log in
+                            {{ __('Login') }}
                         </a>
                         @if (Route::has('register'))
                             <a href="{{ route('register') }}"
                                class="ml-1 text-sm font-semibold text-white px-5 py-2 rounded-lg transition-all hover:-translate-y-px"
                                style="background:linear-gradient(135deg,#249E94,#3BC1A8);box-shadow:0 2px 14px rgba(59,193,168,.4);">
-                                Register
+                                {{ __('Register') }}
                             </a>
                         @endif
                     @endauth
@@ -111,19 +111,19 @@
             <div class="anim-2">
                 <span class="inline-block text-[11px] font-bold tracking-[.14em] uppercase px-3 py-1 rounded-full mb-4"
                       style="background:rgba(36,158,148,.1);color:#249E94;border:1px solid rgba(59,193,168,.25);">
-                    Error 403
+                    {{ __('Error 403') }}
                 </span>
             </div>
 
             {{-- Title --}}
             <h1 class="anim-2 font-extrabold text-4xl text-[#005461] mb-3">
-                Access <span class="grad-text">Denied</span>
+                {{ __('Access') }} <span class="grad-text">{{ __('Denied') }}</span>
             </h1>
 
             {{-- Message --}}
             <p class="anim-3 text-[#4a7a82] text-base leading-relaxed mb-8 max-w-sm mx-auto">
-                You don't have permission to view this page.
-                Please contact your administrator or go back to a safe page.
+                {{ __('You do not have permission to view this page.') }}
+                {{ __('Please contact your administrator or go back to a safe page.') }}
             </p>
 
             {{-- Divider --}}
@@ -139,7 +139,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                     </svg>
-                    Go Back
+                    {{ __('Go Back') }}
                 </button>
 
                 {{-- Home --}}
@@ -149,15 +149,15 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.092 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
                     </svg>
-                    Home
+                    {{ __('Home') }}
                 </a>
             </div>
 
             {{-- Support hint --}}
             <p class="anim-4 mt-8 text-[#4a7a82] text-xs">
-                Need access?
+                {{ __('Need access?') }}
                 <a href="mailto:contact@aytdaoud.ma" class="underline underline-offset-2 hover:text-[#249E94] transition-colors">
-                    Contact support
+                    {{ __('Contact support') }}
                 </a>
             </p>
 
@@ -167,8 +167,8 @@
     {{-- ───── FOOTER ───── --}}
     <footer class="py-5 text-center text-xs tracking-wide" style="background:#005461;color:rgba(255,255,255,.4);">
         &copy; {{ date('Y') }}
-        <strong class="text-[#3BC1A8] font-semibold">Ayt Daoud Association</strong>
-        &mdash; Water Billing Management System
+        <strong class="text-[#3BC1A8] font-semibold">{{ __('Ayt Daoud Association') }}</strong>
+        &mdash; {{ __('Water Billing Management System') }}
     </footer>
 
 </body>

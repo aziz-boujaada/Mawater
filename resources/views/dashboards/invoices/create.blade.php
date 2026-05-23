@@ -1,130 +1,77 @@
-<!doctype html>
-<html lang="en">
+@php $active = 'invoices'; @endphp
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8" />
-    <title>Create Invoice</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep: '#005461',
-                        teal: '#0C7779',
-                        mid: '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm: ['DM Sans', 'sans-serif'],
-                    },
-                    keyframes: {
-                        slideUp: {
-                            '0%': {
-                                opacity: '0',
-                                transform: 'translateY(28px)'
-                            },
-                            '100%': {
-                                opacity: '1',
-                                transform: 'translateY(0)'
-                            },
-                        }
-                    },
-                    animation: {
-                        slideUp: 'slideUp 0.5s cubic-bezier(0.22,1,0.36,1) both',
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
+@section('title', __('Create Invoice'))
+@section('header', __('Billing Administration'))
 
-<body class="font-dm bg-white min-h-screen flex items-center justify-center px-4 py-10">
-       @include('components.side-bar' , ['active' => 'invoices'])
-    <div class="animate-slideUp bg-white rounded-3xl p-10 w-full max-w-md shadow-2xl relative overflow-hidden">
-
-        {{-- Top accent bar --}}
-        <div class="absolute top-0 left-8 right-8 h-[3px] bg-gradient-to-r from-teal to-light rounded-b-md"></div>
-
-        {{-- Icon --}}
-        <div class="mx-auto mb-4 w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-teal to-light shadow-lg shadow-light/30">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-                <line x1="2" y1="12" x2="4" y2="12" />
-                <line x1="20" y1="12" x2="22" y2="12" />
-                <line x1="12" y1="2" x2="12" y2="4" />
-            </svg>
+@section('content')
+<div class="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div class="premium-card overflow-hidden">
+        <div class="p-8 border-b border-zinc-100 bg-zinc-50/50">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-200 mb-6">
+                <i data-lucide="file-plus" class="text-white w-6 h-6"></i>
+            </div>
+            <h2 class="text-2xl font-syne font-bold text-zinc-900">{{ __('Generate New Invoice') }}</h2>
+            <p class="text-zinc-500 text-sm mt-1">{{ __('Select a meter reading to generate a corresponding villager invoice.') }}</p>
         </div>
 
-        {{-- Heading --}}
-        <h2 class="font-syne font-extrabold text-2xl text-deep text-center tracking-tight mb-1">Create Invoice</h2>
-        <p class="text-center text-sm text-teal/60 mb-7">Register a Invoice to the system</p>
-
-        <form action="{{ route('invoices.store') }}" method="post" class="space-y-5">
+        <form action="{{ route('invoices.store') }}" method="POST" class="p-8 space-y-8">
             @csrf
-            <!-- # region -->
-            {{-- Villager --}}
-            <div class="space-y-1.5">
-                <label class="block text-[0.72rem] font-semibold uppercase tracking-widest text-deep">Villager</label>
-                <select name="reading_id"
 
-
-                    class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none
-                           focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
-                    @forelse($readings->groupBy('meter.villager.user.name') as $name => $group)
-                    <optgroup label="{{ $name }}">
-                        @forelse($group as $reading)
-                        <option value="{{ $reading->id }}">
-                            {{ $name }} - {{ \Carbon\Carbon::parse($reading->reading_date)->format('Y-M') }}
-                        </option>
+            <!-- Reading Selection -->
+            <div class="space-y-3">
+                <label for="reading_id" class="text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">{{ __('Select Recent Reading') }}</label>
+                <div class="relative group">
+                    <select name="reading_id" id="reading_id" required class="input-field appearance-none cursor-pointer">
+                        <option value="" disabled selected>{{ __('Choose a villager & reading period…') }}</option>
+                        @forelse($readings->groupBy(fn($r) => $r->meter->villager->user->name) as $name => $group)
+                            <optgroup label="{{ $name }}">
+                                @foreach($group as $reading)
+                                    <option value="{{ $reading->id }}">
+                                        {{ \Carbon\Carbon::parse($reading->reading_date)->format('F Y') }} — {{ __('Consumption') }}: {{ number_format($reading->consumption, 2) }} m³
+                                    </option>
+                                @endforeach
+                            </optgroup>
                         @empty
-                        <option value="" disabled>there is no reading</option>
+                            <option value="" disabled>{{ __('No pending readings available for invoicing.') }}</option>
                         @endforelse
-                    </optgroup>
-                    @empty
-                    <option value="" disabled>there is no reading at all</option>
-                    @endforelse
-
-                </select>
-            </div>
-            {{-- Submit --}}
-            <button type="submit"
-                class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 rounded-xl
-                               shadow-lg shadow-light/30 hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105
-                               active:translate-y-0 transition-all duration-150 tracking-wide">
-                Create New Invoice →
-            </button>
-            @if (Auth::user()->role == 'collector')
-                  <a href="{{ route('dashboard.collector') }}">
-            @elseif(Auth::user()->role == 'admin')
-                <a href="{{ route('dashboard.collector') }}">
-            @endif
-                    <button type="button"
-                        class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 mt-2 rounded-xl
-                               shadow-lg shadow-light/30 hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105
-                               active:translate-y-0 transition-all duration-150 tracking-wide">
-                        Go Back →
-                    </button></a>
-
-
-                @if(session('error'))
-                <div class="mb-4 rounded-xl bg-red-50 border border-red-200 p-4 text-red-700">
-                    _ {{ session('error') }}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-zinc-400 group-hover:text-emerald-500 transition-colors">
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
                 </div>
-                @endif
+                <p class="text-[10px] text-zinc-400 italic px-1">{{ __('Note: Only readings that haven\'t been invoiced will appear here.') }}</p>
+            </div>
+
+            @if ($errors->any() || session('error'))
+            <div class="rounded-2xl bg-rose-50 border border-rose-200 p-4">
+                <ul class="space-y-1">
+                    @if(session('error'))
+                        <li class="text-rose-600 text-xs font-medium flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                            {{ session('error') }}
+                        </li>
+                    @endif
+                    @foreach ($errors->all() as $error)
+                        <li class="text-rose-600 text-xs font-medium flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                            {{ $error }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            <div class="pt-6 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-end gap-3">
+                    <a href="{{ route('invoices') }}" class="w-full sm:w-auto text-center px-6 py-2.5 rounded-xl text-sm font-bold text-zinc-500 hover:bg-zinc-100 transition-all">
+                    {{ __('Cancel') }}
+                </a>
+                <button type="submit" class="w-full sm:w-auto btn-primary px-8">
+                    {{ __('Generate Invoice') }}
+                    <i data-lucide="file-check" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </form>
     </div>
-
-
-
-
-
-
-
-
-
-</body>
-
-</html>
+</div>
+@endsection

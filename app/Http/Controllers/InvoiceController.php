@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\MeterReadings;
+use App\Services\ListingQueryService;
 use App\Services\ExportInvoiceAsPdf;
 use App\Services\StoreInvoiceService;
 use Illuminate\Http\Request;
@@ -15,21 +16,38 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $query = Invoice::with('reading.meter.villager', 'collector');
 
         if ($user->role == 'villager') {
             $villagerId = $user->villager?->id;
 
-            $invoices = Invoice::with('reading.meter.villager')
-                ->whereHas('reading.meter', function ($query) use ($villagerId) {
-                    $query->where('villager_id', $villagerId);
-                })->paginate(10);
+            $query->whereHas('reading.meter', function ($listingQuery) use ($villagerId) {
+                $listingQuery->where('villager_id', $villagerId);
+            });
         } else {
             $collector_id = $user->id;
-            $invoices = Invoice::with('reading.meter.villager')->where('collector_id', $collector_id)->orderByDesc('billing_period')->paginate(10);
+
+            $query->where('collector_id', $collector_id);
         }
+
+        ListingQueryService::apply($query, $request, [
+            'search' => ['invoice_reference', 'billing_period'],
+            'relations' => [
+                'reading.meter' => ['meter_reference'],
+                'reading.meter.villager.user' => ['name', 'email', 'phone'],
+                'collector' => ['name', 'email', 'phone'],
+            ],
+            'exact' => [
+                'status' => 'status',
+            ],
+            'date_field' => 'billing_period',
+            'amount_field' => 'total_amount',
+        ]);
+
+        $invoices = $query->orderByDesc('billing_period')->paginate(10)->withQueryString();
 
         return view('dashboards.invoices.index', compact('invoices'));
     }

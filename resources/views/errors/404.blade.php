@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>404 — Page Not Found | Ayt Daoud</title>
+    <title>{{ __('404 — Page Not Found') }} | Ayt Daoud</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,15 +59,15 @@
                 <div>
                     <p class="text-white font-bold text-[15px] leading-tight">Ayt Daoud</p>
                     <p class="text-[#3BC1A8] text-[10px] font-medium tracking-widest uppercase">
-                        Water Billing System
+                        {{ __('Water Billing System') }}
                     </p>
                 </div>
             </a>
 
-            <a href="{{ url('/') }}"
+                <a href="{{ url('/') }}"
                 class="text-sm font-semibold text-white px-5 py-2 rounded-lg transition-all hover:-translate-y-px"
                 style="background:linear-gradient(135deg,#249E94,#3BC1A8);box-shadow:0 2px 14px rgba(59,193,168,.4);">
-                Home
+                {{ __('Home') }}
             </a>
         </div>
     </header>
@@ -87,18 +87,18 @@
             {{-- Badge --}}
             <span class="inline-block text-[11px] font-bold tracking-[.14em] uppercase px-3 py-1 rounded-full mb-4"
                 style="background:rgba(36,158,148,.1);color:#249E94;border:1px solid rgba(59,193,168,.25);">
-                Error 404
+                {{ __('Error 404') }}
             </span>
 
             {{-- Title --}}
             <h1 class="font-extrabold text-4xl text-[#005461] mb-3">
-                Page <span class="grad-text">Not Found</span>
+                {{ __('Page') }} <span class="grad-text">{{ __('Not Found') }}</span>
             </h1>
 
             {{-- Message --}}
             <p class="text-[#4a7a82] text-base leading-relaxed mb-8 max-w-sm mx-auto">
-                The page you're looking for doesn’t exist or may have been moved.
-                Please check the URL or return to the homepage.
+                {{ __('The page you are looking for does not exist or may have been moved.') }}
+                {{ __('Please check the URL or return to the homepage.') }}
             </p>
 
             {{-- Divider --}}
@@ -111,20 +111,20 @@
                 <button onclick="history.back()"
                     class="inline-flex items-center gap-2 text-white font-semibold text-sm px-6 py-3 rounded-xl cursor-pointer transition-all hover:-translate-y-1 border-0"
                     style="background:linear-gradient(135deg,#005461,#0C7779);box-shadow:0 4px 20px rgba(0,84,97,.3);">
-                    ← Go Back
+                    ← {{ __('Go Back') }}
                 </button>
 
                 <a href="{{ url('/') }}"
                     class="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3 rounded-xl transition-all hover:-translate-y-1"
                     style="background:rgba(59,193,168,.1);border:1.5px solid rgba(59,193,168,.35);color:#005461;">
-                    🏠 Home
+                    🏠 {{ __('Home') }}
                 </a>
             </div>
 
             <p class="mt-8 text-[#4a7a82] text-xs">
-                Lost?
+                {{ __('Lost?') }}
                 <a href="{{ url('/') }}" class="underline underline-offset-2 hover:text-[#249E94] transition-colors">
-                    Return safely to home page
+                    {{ __('Return safely to home page') }}
                 </a>
             </p>
 
@@ -135,8 +135,8 @@
     <footer class="py-5 text-center text-xs tracking-wide"
         style="background:#005461;color:rgba(255,255,255,.4);">
         &copy; {{ date('Y') }}
-        <strong class="text-[#3BC1A8] font-semibold">Ayt Daoud Association</strong>
-        &mdash; Water Billing Management System
+        <strong class="text-[#3BC1A8] font-semibold">{{ __('Ayt Daoud Association') }}</strong>
+        &mdash; {{ __('Water Billing Management System') }}
     </footer>
 
 </body>

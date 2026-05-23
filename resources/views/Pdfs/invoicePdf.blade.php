@@ -1,10 +1,21 @@
+@php
+    $isRtl = app()->getLocale() === 'ar';
+    $directionClass = $isRtl ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
-    <title>Invoice {{ $invoice->invoice_reference }}</title>
+    <title>{{ __('Invoice') }} {{ $invoice->invoice_reference }}</title>
 
     <style>
+        @font-face {
+            font-family: 'NotoNaskhArabic';
+            src: url('file:///usr/share/fonts/truetype/noto/NotoNaskhArabic-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
             font-family: DejaVu Sans;
             font-size: 13px;
@@ -12,6 +23,17 @@
             margin: 0;
             padding: 20px;
             background: #f7f7f7;
+        }
+
+        .rtl {
+            direction: rtl;
+            text-align: right;
+            font-family: 'NotoNaskhArabic', DejaVu Sans, sans-serif;
+        }
+
+        .ltr {
+            direction: ltr;
+            text-align: left;
         }
 
         .container {
@@ -42,6 +64,18 @@
             font-size: 20px;
         }
 
+        .rtl .header,
+        .rtl .top-title,
+        .rtl .payments,
+        .rtl .footer,
+        .rtl .row,
+        .rtl .container,
+        .rtl table,
+        .rtl th,
+        .rtl td {
+            direction: rtl;
+        }
+
         .section {
             border-top: 1px solid #eee;
         }
@@ -59,6 +93,12 @@
         .value {
             float: right;
             font-weight: bold;
+            text-align: right;
+        }
+
+        .rtl .value {
+            float: left;
+            text-align: left;
         }
 
         .badge {
@@ -101,6 +141,27 @@
             text-align: right;
         }
 
+        .text-left {
+            text-align: left;
+        }
+
+        .row::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .rtl .value,
+        .rtl .label,
+        .rtl table th,
+        .rtl table td,
+        .rtl .header p,
+        .rtl .header h2,
+        .rtl .top-title,
+        .rtl .footer {
+            unicode-bidi: embed;
+        }
+
         /* ===== FOOTER ===== */
         .footer {
             text-align: center;
@@ -112,18 +173,18 @@
 
     </style>
 </head>
-<body>
+<body class="{{ $directionClass }}">
 
 <div class="container">
 
 
     <div class="top-title">
-        Mawater - Ayt Daoud Assosiaction
+        Mawater - Ayt Daoud Association
     </div>
 
     {{-- HEADER --}}
     <div class="header">
-        <p style="margin:0; font-size:12px;">Invoice</p>
+        <p style="margin:0; font-size:12px;">{{ __('Invoice') }}</p>
         <h2>{{ $invoice->invoice_reference }}</h2>
     </div>
 
@@ -131,45 +192,45 @@
     <div class="section">
 
         <div class="row">
-            <span class="label">Invoice ID</span>
+            <span class="label">{{ __('Invoice ID') }}</span>
             <span class="value">#{{ $invoice->id }}</span>
         </div>
 
         <div class="row">
-            <span class="label">Meter</span>
+            <span class="label">{{ __('Meter') }}</span>
             <span class="value">{{ $invoice->reading->meter->meter_reference }}</span>
         </div>
 
         <div class="row">
-            <span class="label">Villager</span>
+            <span class="label">{{ __('Villager') }}</span>
             <span class="value">{{ $invoice->reading->meter->villager->user->name }}</span>
         </div>
 
         <div class="row">
-            <span class="label">Billing Period</span>
+            <span class="label">{{ __('Billing Period') }}</span>
             <span class="value">{{ $invoice->billing_period }}</span>
         </div>
 
         <div class="row">
-            <span class="label">Consumption</span>
+            <span class="label">{{ __('Consumption') }}</span>
             <span class="value">{{ $invoice->reading->consumption }}</span>
         </div>
 
         <div class="row">
-            <span class="label">Status</span>
+            <span class="label">{{ __('Status') }}</span>
             <span class="value">
                 @if($invoice->status == 'paid')
-                    <span class="badge paid">Paid</span>
+                    <span class="badge paid">{{ __('Paid') }}</span>
                 @elseif($invoice->status == 'partially_paid')
-                    <span class="badge partial">Partial</span>
+                    <span class="badge partial">{{ __('Partial') }}</span>
                 @else
-                    <span class="badge unpaid">Unpaid</span>
+                    <span class="badge unpaid">{{ __('Unpaid') }}</span>
                 @endif
             </span>
         </div>
 
         <div class="row">
-            <span class="label">Total</span>
+            <span class="label">{{ __('Total') }}</span>
             <span class="value total">{{ number_format($invoice->total_amount, 2) }} DH</span>
         </div>
 
@@ -177,14 +238,14 @@
 
     {{-- PAYMENTS --}}
     <div class="payments">
-        <h3>Payments History</h3>
+        <h3>{{ __('Payments History') }}</h3>
 
         <table>
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Amount</th>
-                    <th class="text-right">Date</th>
+                    <th>{{ __('Amount') }}</th>
+                    <th class="text-right">{{ __('Date') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -196,7 +257,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="text-right">No payments found</td>
+                        <td colspan="3" class="text-right">{{ __('No payments found') }}</td>
                     </tr>
                 @endforelse
             </tbody>

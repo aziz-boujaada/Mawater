@@ -1,122 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
+@php
+    $active = 'repairs';
+    $isRtl = app()->getLocale() === 'ar';
+@endphp
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>repairs</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep: '#005461',
-                        teal: '#0C7779',
-                        mid: '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm: ['DM Sans', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
+@section('title', __('Repairs'))
+@section('header', __('Maintenance Records'))
 
-<body class="font-dm bg-gray-50 text-gray-800">
-    <div class="flex min-h-screen">
-
-        @include('components.side-bar' , ['active' => 'repairs'])
-
-        <div class="ml-56 flex-1 flex flex-col min-w-0">
-            <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-                <div>
-                    <h1 class="font-syne font-bold text-deep text-lg tracking-tight">Repairs</h1>
-                    <p class="text-xs text-gray-400">Meter reapairs & loses records</p>
-                </div>
-                <a href="{{ route('repairs.create') }}" class="flex items-center gap-2 bg-deep text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal transition-colors shadow-sm">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    New repair
-                </a>
-            </header>
-
-            <main class="flex-1 p-6">
-                <div class="bg-white mb-4 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-syne font-bold text-deep text-sm">All repairs</h3>
-
-                        <div class="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2 text-sm text-gray-400">
-                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                            <input type="text" placeholder="Search…" class="bg-transparent outline-none text-gray-600 placeholder-gray-400 text-sm w-40">
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="bg-gray-50 text-left text-[0.72rem] uppercase tracking-widest text-gray-400 font-semibold">
-                                    <th class="px-6 py-3">ID</th>
-                                    <th class="px-6 py-3">Meter Ref</th>
-                                    <th class="px-6 py-3">Villager</th>
-                                    <th class="px-6 py-3">Repair Agent</th>
-                                    <th class="px-6 py-3">Problem Description</th>
-                                    <th class="px-6 py-3">Repair Cost</th>
-                                    <th class="px-6 py-3">Repair Date</th>
-                                    <th class="px-6 py-3">Status</th>
-                                    <th class="px-6 py-3">Actions</th>
-
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50">
-                                @forelse($repairs as $repair)
-                                <tr class="hover:bg-gray-50/60 transition-colors">
-                                    <td class="px-6 py-3.5 text-gray-400 font-mono text-xs">#{{ $repair->id }}</td>
-                                    <td class="px-6 py-3.5">
-                                        <span class="inline-flex items-center gap-1.5 bg-[#f4fafa] border border-[#d4e8ec] text-teal text-xs font-semibold px-2.5 py-1 rounded-full">
-                                            <i class="fa-solid fa-gauge text-[0.6rem]"></i>
-                                            {{ $repair->meter?->meter_reference ?? '—' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-3.5">
-                                        <span class="text-gray-700 font-medium text-sm">{{ $repair->meter?->villager?->user?->name ?? '—' }}</span>
-                                    </td>
-                                    <td class="px-6 py-3.5">{{ $repair->repair_agent?->name ?? '_'}}</td>
-                                    <td class="px-6 py-3.5">{{ $repair->problem_description }}</td>
-                                    <td class="px-6 py-3.5">{{ number_format($repair->repair_cost, 2) }}</td>
-                                    <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $repair->repair_date }}</td>
-                                    <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $repair->status }}</td>
-
-                                    <td class="px-6 py-3.5 text-right">
-                                        <a href="{{ route('repairs.show', $repair->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="8" class="px-6 py-12 text-center">
-                                        <div class="flex flex-col items-center gap-2">
-                                            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                                                <i class="fa-solid fa-file-circle-xmark text-red-400 text-base"></i>
-                                            </div>
-                                            <p class="text-red-500 font-semibold text-sm">No repairs found</p>
-                                            <p class="text-red-300 text-xs">There are no repairs to display at the moment.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                {{ $repairs->links() }}
-            </main>
+@section('content')
+<div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-zinc-900 font-bold text-xl tracking-tight">{{ __('System Maintenance') }}</h2>
+            <p class="text-zinc-500 text-sm mt-1">{{ __('Track meter repairs, costs, and infrastructure health.') }}</p>
         </div>
+        <a href="{{ route('repairs.create') }}" class="btn-primary w-full sm:w-auto">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            {{ __('New Repair Request') }}
+        </a>
     </div>
-</body>
 
-</html>
+    <div class="premium-card overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50">
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <h3 class="font-syne font-bold text-zinc-900 text-sm">{{ __('All Repair Logs') }}</h3>
+                </div>
+
+                <x-listing-filters
+                    :action="route('repairs')"
+                    :clear-url="route('repairs')"
+                    :search-placeholder="__('Search repairs by meter, villager, or agent...')"
+                    :filters="[
+                        ['type' => 'select', 'name' => 'status', 'label' => __('Status'), 'span' => 2, 'options' => [
+                            '' => __('All Statuses'),
+                            'in progress' => __('In Progress'),
+                            'repaired' => __('Repaired'),
+                        ]],
+                        ['type' => 'select', 'name' => 'date_range', 'label' => __('Date Range'), 'span' => 2, 'options' => [
+                            '' => __('All Dates'),
+                            'today' => __('Today'),
+                            'week' => __('This Week'),
+                            'month' => __('This Month'),
+                            'year' => __('This Year'),
+                        ]],
+                        ['type' => 'date', 'name' => 'from', 'label' => __('From'), 'span' => 2],
+                        ['type' => 'date', 'name' => 'to', 'label' => __('To'), 'span' => 2],
+                        ['type' => 'number', 'name' => 'min_amount', 'label' => __('Min Amount'), 'span' => 2, 'placeholder' => '0.00'],
+                        ['type' => 'number', 'name' => 'max_amount', 'label' => __('Max Amount'), 'span' => 2, 'placeholder' => '0.00'],
+                    ]"
+                />
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full {{ $isRtl ? 'text-right' : 'text-left' }}">
+                <thead class="bg-zinc-50/50 text-zinc-400 uppercase text-[10px] font-bold tracking-widest">
+                    <tr>
+                        <th class="px-6 py-4">{{ __('Meter') }}</th>
+                        <th class="px-6 py-4">{{ __('Villager') }}</th>
+                        <th class="px-6 py-4">{{ __('Agent') }}</th>
+                        <th class="px-6 py-4">{{ __('Status') }}</th>
+                        <th class="px-6 py-4">{{ __('Cost') }}</th>
+                        <th class="px-6 py-4">{{ __('Date') }}</th>
+                        <th class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">{{ __('Actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                    @forelse($repairs as $repair)
+                    <tr class="group hover:bg-zinc-50 transition-all duration-200">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-white border border-zinc-200 flex items-center justify-center text-zinc-400 group-hover:border-emerald-200 group-hover:text-emerald-500 transition-all">
+                                    <i data-lucide="wrench" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-zinc-900">{{ $repair->meter?->meter_reference ?? '—' }}</p>
+                                    <p class="text-[10px] font-mono text-zinc-400 mt-0.5 uppercase tracking-tighter">#{{ $repair->id }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium text-zinc-700">
+                            {{ $repair->meter?->villager?->user?->name ?? '—' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center text-[10px] font-bold text-indigo-600 border border-indigo-100">
+                                    {{ strtoupper(substr($repair->repair_agent?->name ?? '?', 0, 1)) }}
+                                </div>
+                                <span class="text-xs font-semibold text-zinc-600">{{ $repair->repair_agent?->name ?? __('Unassigned') }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @php
+                                $statusClasses = match($repair->status) {
+                                    'repaired' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
+                                    'in_progress' => 'bg-amber-50 text-amber-600 border-amber-100',
+                                    default => 'bg-rose-50 text-rose-600 border-rose-100'
+                                };
+                            @endphp
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border {{ $roleClasses ?? $statusClasses }} uppercase tracking-wider">
+                                {{ str_replace('_', ' ', $repair->status) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-sm font-bold text-zinc-900">{{ number_format($repair->repair_cost, 2) }} DH</span>
+                        </td>
+                        <td class="px-6 py-4 text-xs font-semibold text-zinc-500">
+                            {{ \Carbon\Carbon::parse($repair->repair_date)->format('M d, Y') }}
+                        </td>
+                        <td class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">
+                            <a href="{{ route('repairs.show', $repair->id) }}" class="p-2 rounded-lg text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all inline-block" title="{{ __('View Details') }}">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="px-6 py-16 text-center">
+                            <i data-lucide="wrench" class="w-12 h-12 text-zinc-200 mx-auto mb-4"></i>
+                            <h4 class="text-zinc-900 font-bold">{{ __('No repairs found') }}</h4>
+                            <p class="text-zinc-500 text-xs mt-1">{{ __('Maintenance logs will appear here once repairs are logged.') }}</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        @if($repairs->hasPages())
+        <div class="px-6 py-4 bg-zinc-50/50 border-t border-zinc-100">
+            {{ $repairs->links() }}
+        </div>
+        @endif
+    </div>
+</div>
+@endsection

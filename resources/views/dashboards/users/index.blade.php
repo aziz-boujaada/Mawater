@@ -1,160 +1,137 @@
-<!DOCTYPE html>
-<html lang="en">
+@php
+    $active = 'users';
+    $isRtl = app()->getLocale() === 'ar';
+@endphp
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep: '#005461',
-                        teal: '#0C7779',
-                        mid: '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm: ['DM Sans', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
+@section('title', __('Users'))
+@section('header', __('User Management'))
 
-<body class="font-dm bg-gray-50 text-gray-800">
-    <div class="flex min-h-screen">
-
-        @include('components.side-bar' , ['active' => 'users'])
-
-        <div class="ml-56 flex-1 flex flex-col min-w-0">
-            <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-                <div>
-                    <h1 class="font-syne font-bold text-deep text-lg tracking-tight">Users</h1>
-                    <p class="text-xs text-gray-400">Discover all Users Profiles</p>
-                </div>
-                <a href="{{ route('register') }}" class="flex items-center gap-2 bg-deep text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal transition-colors shadow-sm">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    New User
-                </a>
-            </header>
-
-            <main class="flex-1 p-6">
-                <div class="bg-white mb-4 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-syne font-bold text-deep text-sm">All Users</h3>
-
-                        <div class="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2 text-sm text-gray-400">
-                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                            <input type="text" placeholder="Search…" class="bg-transparent outline-none text-gray-600 placeholder-gray-400 text-sm w-40">
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="bg-gray-50 text-left text-[0.72rem] uppercase tracking-widest text-gray-400 font-semibold">
-                                    <th class="px-6 py-3">ID</th>
-                                    <th class="px-6 py-3">Full Name</th>
-                                    <th class="px-6 py-3">Email</th>
-                                    <th class="px-6 py-3">Role</th>
-                                    <th class="px-6 py-3">Phone</th>
-                                    <th class="px-6 py-3">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50">
-                                @forelse($users as $user)
-                                <tr class="hover:bg-gray-50/60 transition-colors">
-                                    <td class="px-6 py-3.5 text-gray-400 font-mono text-xs">#{{ $user->id }}</td>
-                                    <td class="px-6 py-3.5">
-                                        <span class="inline-flex items-center gap-1.5 bg-[#f4fafa] border border-[#d4e8ec] text-teal text-xs font-semibold px-2.5 py-1 rounded-full">
-                                            <i class="fa-solid fa-user text-[0.6rem]"></i>
-                                            {{ $user->name ?? '—' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-3.5">
-                                        <span class="text-gray-700 font-medium text-sm">
-                                         <i class="fa-solid fa-envelope text-[0.6rem]"></i>
-                                        {{ $user->email ?? '—' }}</span>
-                                    </td>
-                                    <td class="px-6 py-3.5">
-                                        @if($user->role == 'admin')
-                                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Admin
-                                        </span>
-                                        @elseif($user->role == 'collector')
-                                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Collector
-                                        </span>
-                                        @elseif($user->role == 'repair_agent')
-                                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Repair Agent
-                                        </span>
-                                        @elseif($user->role == 'villager')
-                                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> Villager
-                                        </span>
-                                        @endif
-                                    </td>
-                                    <td class="text-gray-700 font-medium text-sm">{{ $user->phone }}</td>
-
-                                    <td>
-                                        <a href="{{ route('user.show' , $user->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
-                                        <a href="{{ route('user.edit' , $user->id) }}" class="text-xs text-mid font-semibold hover:underline">Edit</a>
-
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="8" class="px-6 py-12 text-center">
-                                        <div class="flex flex-col items-center gap-2">
-                                            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                                                <i class="fa-solid fa-file-circle-xmark text-red-400 text-base"></i>
-                                            </div>
-                                            <p class="text-red-500 font-semibold text-sm">No User found</p>
-                                            <p class="text-red-300 text-xs">There are no Users to display at the moment.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="response_messgaes">
-                    @if(session('error'))
-                    <div class="mb-4 rounded-xl bg-red-50 border border-red-200 p-4 text-red-700">
-                        _ {{ session('error') }}
-                    </div>
-                    @elseif(session('success'))
-                    <div class="mb-4 rounded-xl bg-green-50 border border-green-200 p-4 text-green-700">
-                        _ {{ session('success') }}
-                    </div>
-                    @endif
-                </div>
-                {{ $users->links() }}
-            </main>
+@section('content')
+<div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-zinc-900 font-bold text-xl tracking-tight">{{ __('Access Control') }}</h2>
+            <p class="text-zinc-500 text-sm mt-1">{{ __('Manage system users, roles, and permissions.') }}</p>
         </div>
+        <a href="{{ route('register') }}" class="btn-primary w-full sm:w-auto">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            {{ __('Add New User') }}
+        </a>
     </div>
-</body>
 
-<script>
-    const hideresponsMessage = () => {
-        const respons_msg = document.getElementById('.resposns_messages')
-        if (respons_msg) {
-            setTimeout(() => {
-                respons_msg.classList.add('hidden');
-            }, 5000);
-        }
-        hideresponsMessage()
-    }
-</script>
+    <div class="premium-card overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50">
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <h3 class="font-syne font-bold text-zinc-900 text-sm">{{ __('Active Directory') }}</h3>
+                </div>
 
-</html>
+                <x-listing-filters
+                    :action="route('users')"
+                    :clear-url="route('users')"
+                    :search-placeholder="__('Search users, email, or phone...')"
+                    :filters="[
+                        ['type' => 'select', 'name' => 'role', 'label' => __('Role'), 'span' => 2, 'options' => [
+                            '' => __('All Roles'),
+                            'admin' => __('Admin'),
+                            'collector' => __('Collector'),
+                            'repair_agent' => __('Repair Agent'),
+                            'villager' => __('Villager'),
+                        ]],
+                        ['type' => 'select', 'name' => 'date_range', 'label' => __('Date Range'), 'span' => 2, 'options' => [
+                            '' => __('All Dates'),
+                            'today' => __('Today'),
+                            'week' => __('This Week'),
+                            'month' => __('This Month'),
+                            'year' => __('This Year'),
+                        ]],
+                        ['type' => 'date', 'name' => 'from', 'label' => __('From'), 'span' => 2],
+                        ['type' => 'date', 'name' => 'to', 'label' => __('To'), 'span' => 2],
+                    ]"
+                />
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full {{ $isRtl ? 'text-right' : 'text-left' }}">
+                <thead class="bg-zinc-50/50 text-zinc-400 uppercase text-[10px] font-bold tracking-widest">
+                    <tr>
+                        <th class="px-6 py-4">{{ __('User') }}</th>
+                        <th class="px-6 py-4">{{ __('Contact') }}</th>
+                        <th class="px-6 py-4">{{ __('Role') }}</th>
+                        <th class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">{{ __('Actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                    @forelse($users as $user)
+                    <tr class="group hover:bg-zinc-50 transition-all duration-200">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold shadow-sm shadow-emerald-200">
+                                    {{ strtoupper(substr($user->name ?? 'A', 0, 1)) }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-zinc-900">{{ $user->name }}</p>
+                                    <p class="text-[10px] font-mono text-zinc-400 mt-0.5">ID: #{{ $user->id }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-1.5 text-xs text-zinc-600">
+                                    <i data-lucide="mail" class="w-3 h-3 text-zinc-400"></i>
+                                    {{ $user->email }}
+                                </div>
+                                <div class="flex items-center gap-1.5 text-xs text-zinc-600">
+                                    <i data-lucide="phone" class="w-3 h-3 text-zinc-400"></i>
+                                    {{ $user->phone ?? __('No phone') }}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @php
+                                $roleClasses = match($user->role) {
+                                    'admin' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
+                                    'collector' => 'bg-blue-50 text-blue-600 border-blue-100',
+                                    'repair_agent' => 'bg-purple-50 text-purple-600 border-purple-100',
+                                    default => 'bg-amber-50 text-amber-600 border-amber-100'
+                                };
+                            @endphp
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border {{ $roleClasses }} uppercase tracking-wider">
+                                {{ str_replace('_', ' ', $user->role) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">
+                            <div class="flex items-center {{ $isRtl ? 'justify-start' : 'justify-end' }} gap-2">
+                                <a href="{{ route('user.show', $user->id) }}" class="p-2 rounded-lg text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all" title="{{ __('View Profile') }}">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </a>
+                                <a href="{{ route('user.edit', $user->id) }}" class="p-2 rounded-lg text-zinc-400 hover:text-blue-600 hover:bg-blue-50 transition-all" title="{{ __('Edit User') }}">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-16 text-center">
+                            <i data-lucide="users-2" class="w-12 h-12 text-zinc-200 mx-auto mb-4"></i>
+                            <h4 class="text-zinc-900 font-bold">{{ __('No users found') }}</h4>
+                            <p class="text-zinc-500 text-xs mt-1">{{ __('Wait for new registrations or add users manually.') }}</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        @if($users->hasPages())
+        <div class="px-6 py-4 bg-zinc-50/50 border-t border-zinc-100">
+            {{ $users->links() }}
+        </div>
+        @endif
+    </div>
+</div>
+@endsection

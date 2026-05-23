@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRepairRequest;
 use App\Models\Meter;
 use App\Models\Repair;
+use App\Services\ListingQueryService;
 use App\Services\StoreRepairService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,9 +15,25 @@ class RepairController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $repairs = Repair::with('repair_agent')->paginate(10);
+        $repairsQuery = Repair::with('meter.villager.user', 'repair_agent');
+
+        ListingQueryService::apply($repairsQuery, $request, [
+            'search' => ['problem_description'],
+            'relations' => [
+                'meter' => ['meter_reference'],
+                'meter.villager.user' => ['name', 'email', 'phone'],
+                'repair_agent' => ['name', 'email', 'phone'],
+            ],
+            'exact' => [
+                'status' => 'status',
+            ],
+            'date_field' => 'repair_date',
+            'amount_field' => 'repair_cost',
+        ]);
+
+        $repairs = $repairsQuery->orderByDesc('repair_date')->paginate(10)->withQueryString();
         return view('dashboards.repairs.index' , compact('repairs'));
     }
 
@@ -37,14 +54,17 @@ class RepairController extends Controller
     {
         $repair_info = $request->validated();
         $storeRepairService->storeRepair($repair_info);
+
+        return redirect()->route('repairs');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Repair $repair)
+    public function show($id)
     {
-        //
+        $repair = Repair::with(['meter.villager.user', 'repair_agent'])->findOrFail($id);
+        return view('dashboards.repairs.show', compact('repair'));
     }
 
     /**

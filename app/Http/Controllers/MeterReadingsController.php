@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMeterReadings;
 use App\Models\Meter;
 use App\Models\MeterReadings;
+use App\Services\ListingQueryService;
 use App\Services\StoreReadingService;
 use Exception;
 use Illuminate\Http\Request;
@@ -18,22 +19,29 @@ class MeterReadingsController extends Controller
 
 
 
-    public function index()
+    public function index(Request $request)
     {
-         
-
         $user = Auth::user();
+        $query = MeterReadings::with('meter.villager.user');
 
         if ($user->role == 'villager') {
             $villagerId = $user->villager?->id;
 
-            $readings = MeterReadings::with('meter.villager.user')
-                ->whereHas('meter.villager', function ($query) use ($villagerId) {
-                    $query->where('villager_id', $villagerId);
-                })->paginate(10);
-        } else {
-            $readings = MeterReadings::with('meter.villager.user')->paginate(10);
+            $query->whereHas('meter.villager', function ($listingQuery) use ($villagerId) {
+                $listingQuery->where('villager_id', $villagerId);
+            });
         }
+
+        ListingQueryService::apply($query, $request, [
+            'search' => ['reading_date'],
+            'relations' => [
+                'meter' => ['meter_reference'],
+                'meter.villager.user' => ['name', 'email', 'phone'],
+            ],
+            'date_field' => 'reading_date',
+        ]);
+
+        $readings = $query->orderByDesc('reading_date')->paginate(10)->withQueryString();
         return view('dashboards.readings.index', compact('readings'));
     }
 

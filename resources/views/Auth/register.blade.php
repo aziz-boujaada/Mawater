@@ -1,183 +1,144 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8" />
-    <title>Register</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep:  '#005461',
-                        teal:  '#0C7779',
-                        mid:   '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm:   ['DM Sans', 'sans-serif'],
-                    },
-                    keyframes: {
-                        slideUp: {
-                            '0%':   { opacity: '0', transform: 'translateY(28px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    },
-                    animation: {
-                        slideUp: 'slideUp 0.5s cubic-bezier(0.22,1,0.36,1) both',
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ __('Register') }} - MeterPro</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-dm bg-deep min-h-screen flex items-center justify-center px-4 py-10">
-
-<div class="animate-slideUp w-full max-w-4xl flex rounded-3xl shadow-2xl overflow-hidden">
-
-    {{-- WELCOME ASIDE --}}
-    <aside class="hidden lg:flex flex-col justify-between w-80 shrink-0 bg-gradient-to-br from-teal via-[#0e8a8c] to-mid p-10 relative overflow-hidden">
-
-        <div class="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-white/5"></div>
-        <div class="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-white/5"></div>
-
-        {{-- Top --}}
-        <div class="relative z-10">
-            <div class="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center mb-8">
-                <i class="fa-solid fa-gauge text-white text-xl"></i>
-            </div>
-            <h1 class="font-syne font-extrabold text-white text-3xl leading-tight mb-3">
-                Welcome to<br>MeterPro
-            </h1>
-            <p class="text-white/60 text-sm leading-relaxed">
-                Smart water meter management for rural communities. Track, monitor, and report with ease.
-            </p>
-        </div>
-
-        {{-- Features --}}
-        <div class="relative z-10 space-y-4 my-8">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-dial text-white text-xs"></i>
-                </div>
-                <p class="text-white/80 text-sm">Real-time meter monitoring</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-users text-white text-xs"></i>
-                </div>
-                <p class="text-white/80 text-sm">Manage villagers & accounts</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-file-lines text-white text-xs"></i>
-                </div>
-                <p class="text-white/80 text-sm">Automated billing & reports</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-shield-halved text-white text-xs"></i>
-                </div>
-                <p class="text-white/80 text-sm">Role-based access control</p>
-            </div>
-        </div>
-
-        {{-- Bottom CTA --}}
-        <div class="relative z-10">
-            <p class="text-white/50 text-xs mb-2">Already have an account?</p>
-            <a href="{{ route('login') ?? '#' }}"
-               class="inline-flex items-center gap-2 text-white text-sm font-semibold border border-white/25 px-4 py-2 rounded-xl hover:bg-white/10 transition-colors">
-                <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
-                Sign In
-            </a>
-        </div>
-    </aside>
-
-    {{-- FORM CARD --}}
-    <div class="flex-1 bg-white p-10 relative overflow-y-auto">
-
-        {{-- Top accent bar --}}
-        <div class="absolute top-0 left-8 right-8 h-[3px] bg-gradient-to-r from-teal to-light rounded-b-md"></div>
-
-        {{-- Icon --}}
-        <div class="mx-auto mb-4 w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-teal to-light shadow-lg shadow-light/30">
-            <i class="fa-solid fa-user-plus text-white text-xl"></i>
-        </div>
-
-        <h2 class="font-syne font-extrabold text-2xl text-deep text-center tracking-tight mb-1">Create Account</h2>
-        <p class="text-center text-sm text-teal/60 mb-7">Fill in the details to register a new user</p>
-
-        <form action="{{route('register.store')}}" method="post" class="space-y-4">
-            @csrf
-
-            <input type="text" name="name" placeholder="Full Name"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-            <input type="email" name="email" placeholder="Email"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-            <input type="password" name="password" placeholder="Password"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-            <input type="password" name="password_confirmation" placeholder="Confirm Password"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-            <input type="text" name="phone" placeholder="Phone"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-              <select id="role" name="role"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition"
-                onchange="toggleVillagerFields()">
-                <option value="">Select Role</option>
-                <!-- <option value="admin">Admin</option> -->
-                <option value="repair_agent">Repair Agent</option>
-                <option value="collector">Collector</option>
-                <option value="villager">Villager</option>
-            </select>
-
-            <div id="villagerFields" class="space-y-4 hidden">
-                <input type="text" name="cin" placeholder="CIN"
-                    class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-                <input type="text" name="address" placeholder="Address"
-                    class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-                <select name="subscription_status"
-                    class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none appearance-none focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition">
-                    <option value="">Subscription Status</option>
-                    <option value="subscribed">Subscribed</option>
-                    <option value="not_subscribed">Not Subscribed</option>
-                </select>
-            </div>
-
-            <div id="message" class="text-center text-sm font-medium"></div>
-
-            <button type="submit" id="register_btn"
-                class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 rounded-xl shadow-lg shadow-light/30 hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105 active:translate-y-0 transition-all duration-150 tracking-wide">
-                Register
-            </button>
-
-            @if ($errors->any())
-            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-                <ul class="space-y-1">
-                    @foreach ($errors->all() as $error)
-                    <li class="text-red-600 text-sm">— {{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
-        </form>
+<body class="font-sans bg-zinc-950 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    
+    <!-- Background Accents -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[60%] bg-emerald-500/10 blur-[120px] rounded-full"></div>
+        <div class="absolute -bottom-[20%] -right-[10%] w-[50%] h-[60%] bg-emerald-600/10 blur-[120px] rounded-full"></div>
     </div>
 
-</div>
+    <div class="w-full max-w-[540px] animate-in fade-in zoom-in-95 duration-500">
+        
+        <!-- Logo Area -->
+        <div class="flex flex-col items-center mb-8">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/20 mb-4">
+                <i data-lucide="droplets" class="text-white w-8 h-8"></i>
+            </div>
+            <h1 class="font-syne font-extrabold text-white text-3xl tracking-tight">MeterPro</h1>
+            <p class="text-zinc-500 text-sm mt-2">{{ __('New user registration') }}</p>
+        </div>
+
+        <!-- Register Card -->
+        <div class="bg-zinc-900 border border-white/5 rounded-[32px] p-8 md:p-10 shadow-2xl">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-white tracking-tight">{{ __('Create Account') }}</h2>
+                <p class="text-zinc-500 text-sm mt-1">{{ __('Join the smart water management platform.') }}</p>
+            </div>
+
+            <form action="{{ route('register.store') }}" method="POST" class="space-y-5">
+                @csrf
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- Full Name -->
+                    <div class="space-y-2">
+                        <label for="name" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Full Name') }}</label>
+                        <input type="text" name="name" id="name" required placeholder="{{ __('Enter your full name') }}" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600 text-sm" />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="space-y-2">
+                        <label for="email" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Email Address') }}</label>
+                        <input type="email" name="email" id="email" required placeholder="{{ __('Enter your email address') }}" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600 text-sm" />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="space-y-2">
+                        <label for="password" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Password') }}</label>
+                        <input type="password" name="password" id="password" required placeholder="{{ __('Enter your password') }}" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600 text-sm" />
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="space-y-2">
+                        <label for="password_confirmation" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Confirm Password') }}</label>
+                        <input type="password" name="password_confirmation" id="password_confirmation" required placeholder="{{ __('Confirm your password') }}" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600 text-sm" />
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="space-y-2">
+                        <label for="phone" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Phone Number') }}</label>
+                        <input type="text" name="phone" id="phone" required placeholder="{{ __('Enter your phone number') }}" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600 text-sm" />
+                    </div>
+
+                    <!-- Role -->
+                    <div class="space-y-2">
+                        <label for="role" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Select Role') }}</label>
+                        <select id="role" name="role" required class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all appearance-none cursor-pointer text-sm" onchange="toggleVillagerFields()">
+                            <option value="">{{ __('Select Role') }}</option>
+                            <option value="repair_agent">{{ __('Repair Agent') }}</option>
+                            <option value="collector">{{ __('Collector') }}</option>
+                            <option value="villager">{{ __('Villager') }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Villager Fields (Conditional) -->
+                <div id="villagerFields" class="space-y-5 hidden pt-4 border-t border-white/5 animate-in slide-in-from-top-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label for="cin" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('CIN') }}</label>
+                            <input type="text" name="cin" id="cin" placeholder="{{ __('Enter your CIN') }}" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600 text-sm" />
+                        </div>
+                        <div class="space-y-2">
+                            <label for="address" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Address') }}</label>
+                            <input type="text" name="address" id="address" placeholder="{{ __('Enter your address') }}" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600 text-sm" />
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="subscription_status" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Subscription') }}</label>
+                        <select name="subscription_status" id="subscription_status" class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl px-4 py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all appearance-none cursor-pointer text-sm">
+                            <option value="subscribed">{{ __('Subscribed') }}</option>
+                            <option value="not_subscribed">{{ __('Not Subscribed') }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                @if ($errors->any())
+                <div class="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4">
+                    <ul class="space-y-1">
+                        @foreach ($errors->all() as $error)
+                        <li class="text-rose-400 text-xs font-medium flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                            {{ $error }}
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                <button
+                    type="submit"
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-syne font-bold py-4 rounded-2xl shadow-xl shadow-emerald-600/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 tracking-wide mt-2">
+                    {{ __('Create Account') }}
+                </button>
+            </form>
+
+            <div class="mt-8 pt-8 border-t border-white/5 text-center text-sm text-zinc-500">
+                {{ __('Already have an account?') }}
+                <a href="{{ route('login') }}" class="font-bold text-white hover:text-emerald-500 transition-colors {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Sign In') }}</a>
+            </div>
+        </div>
+    </div>
 
     <script>
+        lucide.createIcons();
+
         function toggleVillagerFields() {
             const role = document.getElementById("role").value;
             const fields = document.getElementById("villagerFields");
@@ -197,9 +158,6 @@
                 }
             });
         }
-
-        document.addEventListener('DOMContentLoaded', toggleVillagerFields);
     </script>
 </body>
-
 </html>

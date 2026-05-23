@@ -21,11 +21,19 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['ar', 'en', 'fr'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
 
 
 Route::middleware(['auth'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/invoice/{id}/pdf', [InvoiceController::class, 'exportPdf'])->name('invoice.pdf');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('admin/dashboard', [DashboardsController::class, 'admin'])->name('dashboard.admin');
@@ -76,8 +84,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
         Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
         Route::get('/invoices/show/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-        //export invoice pdf 
-        Route::get('/invoice/{id}/pdf', [InvoiceController::class, 'exportPdf'])->name('invoice.pdf');
 
         Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
         Route::get('payments/create', [PaymentController::class, 'create'])->name('payments.create');
@@ -92,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('repairs', [RepairController::class, 'index'])->name('repairs');
         Route::get('repairs/create', [RepairController::class, 'create'])->name('repairs.create');
         Route::post('repairs/store', [RepairController::class, 'store'])->name('repairs.store');
-        Route::get('repairs/show', [RepairController::class, 'show'])->name('repairs.show');
+        Route::get('repairs/show/{id}', [RepairController::class, 'show'])->name('repairs.show');
     });
 
     // villager

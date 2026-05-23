@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateMeterRequest;
 use App\Models\Meter;
 use App\Models\User;
 use App\Models\Villager;
+use App\Services\ListingQueryService;
 use App\Services\StoreMeterService;
 use App\Services\UpdateMeterService;
 use Illuminate\Http\Request;
@@ -17,9 +18,22 @@ class MetersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $meters = Meter::with('villager')->paginate(10);
+        $query = Meter::with('villager.user');
+
+        ListingQueryService::apply($query, $request, [
+            'search' => ['meter_reference', 'installation_date'],
+            'relations' => [
+                'villager.user' => ['name', 'email', 'phone'],
+            ],
+            'exact' => [
+                'status' => 'status',
+            ],
+            'date_field' => 'installation_date',
+        ]);
+
+        $meters = $query->orderByDesc('installation_date')->paginate(10)->withQueryString();
         return view('dashboards.meters.index', compact('meters'));
     }
 

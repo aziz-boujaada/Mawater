@@ -1,155 +1,150 @@
-<!DOCTYPE html>
-<html lang="en">
+@php
+    $active = 'invoices';
+    $isRtl = app()->getLocale() === 'ar';
+@endphp
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoices</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep: '#005461',
-                        teal: '#0C7779',
-                        mid: '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm: ['DM Sans', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
+@section('title', __('Invoices'))
+@section('header', __('Billing & Invoices'))
 
-<body class="font-dm bg-gray-50 text-gray-800">
-    <div class="flex min-h-screen">
-
-        {{-- SIDEBAR --}}
-        @include('components.side-bar' ,['active' => 'invoices'])
-
-        {{-- MAIN --}}
-        <div class="ml-56 flex-1 flex flex-col min-w-0">
-
-            {{-- TOPBAR --}}
-            <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-                <div>
-                    <h1 class="font-syne font-bold text-deep text-lg tracking-tight">Invoices</h1>
-                    <p class="text-xs text-gray-400">Billing records & payment history</p>
-                </div>
-                <a href="{{ route('invoices.create') }}"
-                    class="flex items-center gap-2 bg-deep text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal transition-colors shadow-sm">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    New Invoice
-                </a>
-            </header>
-
-            {{-- CONTENT --}}
-            <main class="flex-1 p-6">
-                <div class="bg-white mb-4 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-                    {{-- Table header --}}
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-syne font-bold text-deep text-sm">All Invoices</h3>
-
-                        {{-- Search --}}
-                        <div class="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2 text-sm text-gray-400">
-                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                            <input type="text" placeholder="Search…" class="bg-transparent outline-none text-gray-600 placeholder-gray-400 text-sm w-40">
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="bg-gray-50 text-left text-[0.72rem] uppercase tracking-widest text-gray-400 font-semibold">
-                                    <th class="px-6 py-3">ID</th>
-                                    <th class="px-6 py-3">Reference</th>
-                                    <th class="px-6 py-3">Meter Ref</th>
-                                    <th class="px-6 py-3">Villager</th>
-                                    <th class="px-6 py-3">Amount</th>
-                                    <th class="px-6 py-3">Remaining Amount</th>
-                                    <th class="px-6 py-3">status</th>
-                                    <th class="px-6 py-3">Billing Period</th>
-                                    <th class="px-6 py-3"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50">
-                                @forelse($invoices as $invoice)
-                                <tr class="hover:bg-gray-50/60 transition-colors">
-                                    <td class="px-6 py-3.5 text-gray-400 font-mono text-xs">#{{ $invoice->id }}</td>
-                                    <td class="px-6 py-3.5 font-semibold text-deep text-xs tracking-wide">{{ $invoice->invoice_reference }}</td>
-                                    <td class="px-6 py-3.5">
-                                        <span class="inline-flex items-center gap-1.5 bg-[#f4fafa] border border-[#d4e8ec] text-teal text-xs font-semibold px-2.5 py-1 rounded-full">
-                                            <i class="fa-solid fa-gauge text-[0.6rem]"></i>
-                                            {{ $invoice->reading?->meter?->meter_reference ?? '—' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-3.5">
-                                        <div class="flex items-center gap-2">
-                                            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-mid to-light flex items-center justify-center text-white text-[0.6rem] font-bold shrink-0">
-                                                {{ strtoupper(substr($invoice->reading?->meter?->villager?->user?->name ?? 'U', 0, 2)) }}
-                                            </div>
-                                            <span class="text-gray-700 font-medium text-sm">{{ $invoice->reading?->meter?->villager?->user?->name ?? '—' }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-3.5">
-                                        <span class="font-syne font-bold text-deep">{{ number_format($invoice->total_amount, 2) }}</span>
-                                        <span class="text-yellow-600 text-xs ml-0.5">DH</span>
-                                    </td>
-                                    
-                                     <td class="px-6 py-3.5">
-                                        <span class="font-syne bg-red-50 p-1 rounded-2xl  font-bold text-red-500">{{ number_format($invoice->remaining_amount, 2) }}</span>
-                                        <span class="text-yellow-600 text-xs ml-0.5">DH</span>
-                                    </td>
-                                    <td class="px-6 py-3.5 text-gray-500 text-xs">
-                                        @if ($invoice->status == 'paid')
-                                        <span class="inline-flex items-center justify-center w-[100px] gap-1.5  font-syne font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
-                                            paid
-                                        </span>
-                                        @elseif($invoice->status == 'partially_paid')
-                                        <span class="inline-flex items-center justify-center w-[100px] gap-1.5  font-syne font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full">
-                                            Partial Paid
-                                        </span>
-                                        @elseif($invoice->status == 'unpaid')
-                                        <span class="inline-flex items-center justify-center w-[100px] gap-1.5  font-syne font-semibold text-red-600 bg-red-50 px-2.5 py-1 rounded-full">
-                                            Unpaid
-                                        </span>
-                                        @endif
-                                        <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $invoice->billing_period }}</td>
-                                        
-                                    </td>
-                                    <td class="px-6 py-3.5 text-right">
-                                        <a href="{{ route('invoices.show' ,$invoice->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="7" class="px-6 py-12 text-center">
-                                        <div class="flex flex-col items-center gap-2">
-                                            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                                                <i class="fa-solid fa-file-circle-xmark text-red-400 text-base"></i>
-                                            </div>
-                                            <p class="text-red-500 font-semibold text-sm">No invoices found</p>
-                                            <p class="text-red-300 text-xs">There are no invoices to display at the moment.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                {{ $invoices->links() }}
-            </main>
+@section('content')
+<div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-zinc-900 font-bold text-xl tracking-tight">{{ __('Revenue Records') }}</h2>
+            <p class="text-zinc-500 text-sm mt-1">{{ __('Manage billing periods and village invoices.') }}</p>
         </div>
+          @if (Auth::user()->role == 'admin' || Auth::user()->role == 'collector')
+        <a href="{{ route('invoices.create') }}" class="btn-primary w-full sm:w-auto">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            {{ __('New Invoice') }}
+        </a>
+        @endif
     </div>
-</body>
 
-</html>
+    <div class="premium-card overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50">
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <h3 class="font-syne font-bold text-zinc-900 text-sm">{{ __('Invoice List') }}</h3>
+                </div>
+
+                <x-listing-filters
+                    :action="route('invoices')"
+                    :clear-url="route('invoices')"
+                    :search-placeholder="__('Search invoices by reference or villager...')"
+                    :filters="[
+                        ['type' => 'select', 'name' => 'status', 'label' => __('Status'), 'span' => 2, 'options' => [
+                            '' => __('All Statuses'),
+                            'paid' => __('Paid'),
+                            'partially_paid' => __('Partial'),
+                            'unpaid' => __('Unpaid'),
+                            'cancelled' => __('Cancelled'),
+                        ]],
+                        ['type' => 'select', 'name' => 'date_range', 'label' => __('Date Range'), 'span' => 2, 'options' => [
+                            '' => __('All Dates'),
+                            'today' => __('Today'),
+                            'week' => __('This Week'),
+                            'month' => __('This Month'),
+                            'year' => __('This Year'),
+                        ]],
+                        ['type' => 'date', 'name' => 'from', 'label' => __('From'), 'span' => 2],
+                        ['type' => 'date', 'name' => 'to', 'label' => __('To'), 'span' => 2],
+                        ['type' => 'number', 'name' => 'min_amount', 'label' => __('Min Amount'), 'span' => 2, 'placeholder' => '0.00'],
+                        ['type' => 'number', 'name' => 'max_amount', 'label' => __('Max Amount'), 'span' => 2, 'placeholder' => '0.00'],
+                    ]"
+                />
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full {{ $isRtl ? 'text-right' : 'text-left' }}">
+                <thead class="bg-zinc-50/50 text-zinc-400 uppercase text-[10px] font-bold tracking-widest">
+                    <tr>
+                        <th class="px-6 py-4">{{ __('Reference') }}</th>
+                        <th class="px-6 py-4">{{ __('Villager') }}</th>
+                        <th class="px-6 py-4">{{ __('Amount') }}</th>
+                        <th class="px-6 py-4">{{ __('Status') }}</th>
+                        <th class="px-6 py-4">{{ __('Period') }}</th>
+                        <th class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">{{ __('Actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                    @forelse($invoices as $invoice)
+                    <tr class="group hover:bg-zinc-50 transition-all duration-200">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-white border border-zinc-200 flex items-center justify-center text-zinc-400 group-hover:border-emerald-200 group-hover:text-emerald-500 transition-all">
+                                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-zinc-900">{{ $invoice->invoice_reference }}</p>
+                                    <p class="text-[10px] font-mono text-zinc-400 mt-0.5 uppercase tracking-tighter">#{{ $invoice->id }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-[10px] font-bold text-emerald-600">
+                                    {{ strtoupper(substr($invoice->reading?->meter?->villager?->user?->name ?? 'U', 0, 1)) }}
+                                </div>
+                                <span class="text-sm font-medium text-zinc-700">{{ $invoice->reading?->meter?->villager?->user?->name ?? '—' }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div>
+                                <p class="text-sm font-bold text-zinc-900">{{ number_format($invoice->total_amount, 2) }} DH</p>
+                                @if($invoice->remaining_amount > 0)
+                                <p class="text-[10px] font-bold text-rose-500 mt-0.5">{{ __('Due:') }} {{ number_format($invoice->remaining_amount, 2) }} DH</p>
+                                @endif
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @php
+                                $statusClasses = match($invoice->status) {
+                                    'paid' => 'bg-emerald-50 text-emerald-600',
+                                    'partially_paid' => 'bg-amber-50 text-amber-600',
+                                    default => 'bg-rose-50 text-rose-600'
+                                };
+                                $statusLabel = match($invoice->status) {
+                                    'paid' => __('Paid'),
+                                    'partially_paid' => __('Partial'),
+                                    'cancelled' => __('Cancelled'),
+                                    default => __('Unpaid')
+                                };
+                            @endphp
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold {{ $statusClasses }} uppercase tracking-wider">
+                                {{ $statusLabel }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-xs font-semibold text-zinc-500">
+                            {{ $invoice->billing_period }}
+                        </td>
+                        <td class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">
+                            <a href="{{ route('invoices.show', $invoice->id) }}" class="p-2 rounded-lg text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all inline-block" title="{{ __('View Invoice') }}">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-16 text-center">
+                            <i data-lucide="file-x" class="w-12 h-12 text-zinc-200 mx-auto mb-4"></i>
+                            <h4 class="text-zinc-900 font-bold">{{ __('No invoices found') }}</h4>
+                            <p class="text-zinc-500 text-xs mt-1">{{ __('Start by generating invoices from meter readings.') }}</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        @if($invoices->hasPages())
+        <div class="px-6 py-4 bg-zinc-50/50 border-t border-zinc-100">
+            {{ $invoices->links() }}
+        </div>
+        @endif
+    </div>
+</div>
+@endsection

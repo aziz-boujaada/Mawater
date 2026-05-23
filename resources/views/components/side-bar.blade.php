@@ -1,143 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoices</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep: '#005461',
-                        teal: '#0C7779',
-                        mid: '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm: ['DM Sans', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
-{{--
-    SIDEBAR COMPONENT
-    Usage: @include('components.sidebar', ['active' => 'dashboard'])
-    Active options: dashboard | meters | villagers | reports | readings | invoices | settings
---}}
-
-<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-56 bg-deep flex flex-col py-5 transition-transform duration-300"
-    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
-
-    {{-- Logo --}}
-    <div class="flex items-center gap-3 px-5 mb-6 shrink-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-mid to-light flex items-center justify-center shadow-lg shadow-light/25 shrink-0">
-            <i class="fa-solid fa-gauge text-white text-sm"></i>
-        </div>
-        <span class="font-syne font-bold text-white text-base tracking-tight">MeterPro</span>
-    </div>
-
-    <div class="mx-5 h-px bg-white/10 mb-4 shrink-0"></div>
-
-    {{-- Nav --}}
-    <nav class="flex-1 flex flex-col gap-0.5 px-3 overflow-y-auto">
-        @php
-        $role = auth()->user()->role;
-
-        $dashboardRoute = match ($role) {
+@php
+    $role = auth()->user()->role;
+    $dashboardRoute = match ($role) {
         'admin' => 'dashboard.admin',
         'collector' => 'dashboard.collector',
         'repair_agent' => 'dashboard.repair_agent',
         'villager' => 'dashboard.villager'
-        };
+    };
 
-        $allLinks = [
+    $allLinks = [
         'admin' => [
-        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
-        ['key' => 'users', 'label' => 'users', 'icon' => 'fa-users', 'route' => 'users'],
-        ['key' => 'meters', 'label' => 'Meters', 'icon' => 'fa-gauge', 'route' => 'meters'],
-        ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
-        ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],
-        ['key' => 'payments', 'label' => 'Payments', 'icon' => 'fa-money-bill', 'route' => 'payments'],
-        ['key' => 'repairs', 'label' => 'Repairs', 'icon' => 'fa-screwdriver-wrench', 'route' => 'repairs'],
+            ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'layout-dashboard', 'route' => $dashboardRoute],
+            ['key' => 'users', 'label' => 'Users', 'icon' => 'users', 'route' => 'users'],
+            ['key' => 'meters', 'label' => 'Meters', 'icon' => 'gauge', 'route' => 'meters'],
+            ['key' => 'readings', 'label' => 'Readings', 'icon' => 'activity', 'route' => 'readings'],
+            ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'file-text', 'route' => 'invoices'],
+            ['key' => 'payments', 'label' => 'Payments', 'icon' => 'credit-card', 'route' => 'payments'],
+            ['key' => 'repairs', 'label' => 'Repairs', 'icon' => 'wrench', 'route' => 'repairs'],
         ],
-
         'repair_agent' => [
-        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
-        ['key' => 'repairs', 'label' => 'Repairs', 'icon' => 'fa-screwdriver-wrench', 'route' => 'repairs'],
+            ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'layout-dashboard', 'route' => $dashboardRoute],
+            ['key' => 'repairs', 'label' => 'Repairs', 'icon' => 'wrench', 'route' => 'repairs'],
         ],
-
         'collector' => [
-        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
-        ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
-        ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],
-        ['key' => 'payments', 'label' => 'Payments', 'icon' => 'fa-money-bill', 'route' => 'payments'],
+            ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'layout-dashboard', 'route' => $dashboardRoute],
+            ['key' => 'readings', 'label' => 'Readings', 'icon' => 'activity', 'route' => 'readings'],
+            ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'file-text', 'route' => 'invoices'],
+            ['key' => 'payments', 'label' => 'Payments', 'icon' => 'credit-card', 'route' => 'payments'],
         ],
-
         'villager' => [
-        ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'fa-table-cells-large', 'route' => $dashboardRoute],
-        ['key' => 'readings', 'label' => 'Readings', 'icon' => 'fa-wave-square', 'route' => 'readings'],
-        ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'fa-receipt', 'route' => 'invoices'],
-        ['key' => 'payments', 'label' => 'Payments', 'icon' => 'fa-money-bill', 'route' => 'payments'],
+            ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'layout-dashboard', 'route' => $dashboardRoute],
+            ['key' => 'readings', 'label' => 'Readings', 'icon' => 'activity', 'route' => 'readings'],
+            ['key' => 'invoices', 'label' => 'Invoices', 'icon' => 'file-text', 'route' => 'invoices'],
+            ['key' => 'payments', 'label' => 'Payments', 'icon' => 'credit-card', 'route' => 'payments'],
         ],
-        ];
+    ];
 
-        $links = $allLinks[$role] ?? [];
-        @endphp
+    $links = $allLinks[$role] ?? [];
+@endphp
 
-        @foreach($links as $link)
-        @php $isActive = ($active ?? '') === $link['key']; @endphp
-
-        <a href="{{ route($link['route']) }}"
-            class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors
-       {{ $isActive
-            ? 'bg-white/12 text-white font-medium'
-            : 'text-white/50 hover:text-white hover:bg-white/8' }}">
-
-            @if($isActive)
-            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-light rounded-r-full"></span>
-            @endif
-
-            <i class="fa-solid {{ $link['icon'] }} w-4 text-center shrink-0 {{ $isActive ? 'text-light' : '' }}"></i>
-            {{ $link['label'] }}
-        </a>
-        @endforeach
-
-    </nav>
-
-    {{-- Footer: user + logout --}}
-    <div class="mx-3 mt-4 shrink-0">
-        <div class="h-px bg-white/10 mb-3"></div>
-        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-mid to-light flex items-center justify-center text-white text-xs font-bold shrink-0">
-                {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 2)) }}
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-white text-xs font-semibold truncate">{{ auth()->user()->name }}</p>
-                <p class="text-white/40 text-[0.68rem] truncate">{{ auth()->user()->email }}</p>
-            </div>
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                class="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-white/8 transition-colors shrink-0"
-                title="Logout">
-                <i class="fa-solid fa-right-from-bracket text-sm"></i>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+<aside id="sidebar" class="fixed inset-y-0 {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} z-40 w-64 bg-zinc-950 flex flex-col transition-transform duration-300 {{ app()->getLocale() === 'ar' ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0' }} border-r border-white/5 shadow-2xl">
+    <!-- Logo Section -->
+    <div class="p-6 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <i data-lucide="droplets" class="text-white w-6 h-6"></i>
+        </div>
+        <div>
+            <span class="font-syne font-bold text-white text-lg tracking-tight block leading-none">{{ __('Ait Daoud') }}</span>
+            <span class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mt-1 block">{{ __('Association Rural') }}</span>
         </div>
     </div>
 
+    <!-- Navigation Section -->
+    <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+        @foreach($links as $link)
+            @php $isActive = ($active ?? '') === $link['key']; @endphp
+            <a href="{{ route($link['route']) }}" 
+               class="sidebar-link {{ $isActive ? 'sidebar-link-active' : 'sidebar-link-inactive' }}">
+                <i data-lucide="{{ $link['icon'] }}" class="w-5 h-5"></i>
+                <span class="font-medium">{{ __($link['label']) }}</span>
+                @if($isActive)
+                    <div class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></div>
+                @endif
+            </a>
+        @endforeach
+    </nav>
+
+    <!-- Bottom Actions -->
+    <div class="p-4 bg-zinc-900/50 border-t border-white/5 space-y-2">
+        <div class="px-2 py-3 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-white text-xs font-semibold truncate">{{ auth()->user()->name }}</p>
+                <p class="text-zinc-500 text-[10px] truncate">{{ auth()->user()->email }}</p>
+            </div>
+        </div>
+        
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all duration-200">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                <span class="font-medium">{{ __('Sign Out') }}</span>
+            </button>
+        </form>
+    </div>
 </aside>
 
-{{-- Mobile overlay --}}
-<div id="sidebar-overlay"
-    class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"
-    onclick="toggleSidebar()"></div>
-
-</html>
+<!-- Mobile Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-zinc-950/60 backdrop-blur-sm z-30 hidden lg:hidden" onclick="toggleSidebar()"></div>

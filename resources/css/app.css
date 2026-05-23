@@ -1,11 +1,46 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@import "tailwindcss";
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-syne: "Syne", sans-serif;
+
+  --color-primary: #10b981; /* emerald-500 */
+  --color-primary-hover: #059669; /* emerald-600 */
+  --color-surface: #fafafa; /* zinc-50 */
+  --color-surface-card: #ffffff;
+  --color-border: #e4e4e7; /* zinc-200 */
+  --color-text-main: #09090b; /* zinc-950 */
+  --color-text-muted: #71717a; /* zinc-500 */
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-text-main font-sans antialiased;
+  }
+}
+
+@layer components {
+  .premium-card {
+    @apply bg-surface-card border border-border rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-hover text-white font-semibold px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm shadow-emerald-200/50 cursor-pointer;
+  }
+
+  .input-field {
+    @apply w-full bg-white border border-zinc-200 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-zinc-900 placeholder-zinc-400;
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200;
+  }
+
+  .sidebar-link-active {
+    @apply bg-white/10 text-white font-medium shadow-sm;
+  }
+
+  .sidebar-link-inactive {
+    @apply text-zinc-400 hover:text-white hover:bg-white/5;
+  }
 }

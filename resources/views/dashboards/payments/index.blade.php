@@ -1,135 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
+@php
+    $active = 'payments';
+    $isRtl = app()->getLocale() === 'ar';
+@endphp
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Readings</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep: '#005461',
-                        teal: '#0C7779',
-                        mid: '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm: ['DM Sans', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
+@section('title', __('Payments'))
+@section('header', __('Payment Transactions'))
 
-<body class="font-dm bg-gray-50 text-grav y-800">
-    <div class="flex min-h-screen">
-
-        @include('components.side-bar' , ['active' => 'payments'])
-
-        <div class="ml-56 flex-1 flex flex-col min-w-0">
-            <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-                <div>
-                    <h1 class="font-syne font-bold text-deep text-lg tracking-tight">Payments</h1>
-                    <p class="text-xs text-gray-400">All Payments records</p>
-                </div>
-                <a href="{{ route('payments.create') }}" class="flex items-center gap-2 bg-deep text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal transition-colors shadow-sm">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    New payment
-                </a>
-            </header>
-
-            <main class="flex-1 p-6">
-                <div class="bg-white mb-4 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-syne font-bold text-deep text-sm">All Payments</h3>
-
-                        <div class="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2 text-sm text-gray-400">
-                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                            <input type="text" placeholder="Search…" class="bg-transparent outline-none text-gray-600 placeholder-gray-400 text-sm w-40">
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="bg-gray-50 text-left text-[0.72rem] uppercase tracking-widest text-gray-400 font-semibold">
-                                    <th class="px-6 py-3">ID</th>
-                                    <th class="px-6 py-3">Invoice ID</th>
-                                    <th class="px-6 py-3">Invoice Total</th>
-                                    <th class="px-6 py-3">Collector</th>
-                                    <th class="px-6 py-3">Amount Paid</th>
-
-                                    <th class="px-6 py-3">Paid at</th>
-
-                                    <th class="px-6 py-3"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50">
-                                @forelse($payments as $payment)
-                                <tr class="hover:bg-gray-50/60 transition-colors">
-
-                                    <td class="px-6 py-3.5 text-gray-400 font-mono text-xs">#{{ $payment->id }}</td>
-
-                                    <td class="px-6 py-3.5">
-                                        <span class="inline-flex items-center gap-1.5 bg-[#f4fafa] border border-[#d4e8ec] text-teal text-xs font-semibold px-2.5 py-1 rounded-full">
-                                            <i class="fa-solid fa-receipt text-lg"></i>
-                                            {{ $payment->invoice?->id ?? '—' }}
-                                        </span>
-                                    </td>
-
-                                    <td class="px-6 py-3.5">{{ number_format($payment->invoice?->total_amount ?? 0, 2) }} DH</td>
-
-                                    <td class="px-6 py-3.5">
-                                        <span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
-                                            <i class="fa-solid fa-user text-[0.7rem]"></i>
-                                            {{ $payment->collector?->name ?? '—' }}
-                                        </span>
-                                    </td>
-
-                                    <td class="px-6 py-3.5">
-                                        <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">
-                                            <i class="fa-solid fa-check text-[0.7rem]"></i>
-                                            {{ number_format($payment->amount_paid, 2) }} DH
-                                        </span>
-                                    </td>
-
-                                  
-                                    <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $payment->payment_date }}</td>
-
-                                    <td class="px-6 py-3.5 text-right">
-                                        <a href="{{ route('payments.show', $payment->id) }}" class="text-xs text-mid font-semibold hover:underline">View</a>
-                                    </td>
-
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="8" class="px-6 py-12 text-center">
-                                        <div class="flex flex-col items-center gap-2">
-                                            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                                                <i class="fa-solid fa-file-circle-xmark text-red-400 text-base"></i>
-                                            </div>
-                                            <p class="text-red-500 font-semibold text-sm">No payments found</p>
-                                            <p class="text-red-300 text-xs">There are no payments to display at the moment.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                {{ $payments->links() }}
-            </main>
+@section('content')
+<div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-zinc-900 font-bold text-xl tracking-tight">{{ __('Collection History') }}</h2>
+            <p class="text-zinc-500 text-sm mt-1">{{ __('Review all financial transactions and payment receipts.') }}</p>
         </div>
+        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'collector')
+        
+        <a href="{{ route('payments.create') }}" class="btn-primary w-full sm:w-auto">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            {{ __('New Payment') }}
+        </a>
+        @endif
     </div>
-</body>
 
-</html>
+    <div class="premium-card overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50">
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <h3 class="font-syne font-bold text-zinc-900 text-sm">{{ __('Transaction Logs') }}</h3>
+                </div>
+
+                <x-listing-filters
+                    :action="route('payments')"
+                    :clear-url="route('payments')"
+                    :search-placeholder="__('Search payments by invoice, collector, or villager...')"
+                    :filters="[
+                        ['type' => 'select', 'name' => 'date_range', 'label' => __('Date Range'), 'span' => 2, 'options' => [
+                            '' => __('All Dates'),
+                            'today' => __('Today'),
+                            'week' => __('This Week'),
+                            'month' => __('This Month'),
+                            'year' => __('This Year'),
+                        ]],
+                        ['type' => 'date', 'name' => 'from', 'label' => __('From'), 'span' => 2],
+                        ['type' => 'date', 'name' => 'to', 'label' => __('To'), 'span' => 2],
+                        ['type' => 'number', 'name' => 'min_amount', 'label' => __('Min Amount'), 'span' => 2, 'placeholder' => '0.00'],
+                        ['type' => 'number', 'name' => 'max_amount', 'label' => __('Max Amount'), 'span' => 2, 'placeholder' => '0.00'],
+                    ]"
+                />
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full {{ $isRtl ? 'text-right' : 'text-left' }}">
+                <thead class="bg-zinc-50/50 text-zinc-400 uppercase text-[10px] font-bold tracking-widest">
+                    <tr>
+                        <th class="px-6 py-4">{{ __('ID') }}</th>
+                        <th class="px-6 py-4">{{ __('Invoice') }}</th>
+                        <th class="px-6 py-4">{{ __('Collector') }}</th>
+                        <th class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">{{ __('Amount Paid') }}</th>
+                        <th class="px-6 py-4">{{ __('Date') }}</th>
+                        <th class="px-6 py-4 text-right">{{ __('Actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                    @forelse($payments as $payment)
+                    <tr class="group hover:bg-zinc-50 transition-all duration-200">
+                        <td class="px-6 py-4 font-mono text-[11px] text-zinc-400">#{{ $payment->id }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-zinc-900">{{ __('Inv') }} #{{ $payment->invoice?->id ?? '—' }}</span>
+                                <span class="text-[10px] text-zinc-400">({{ number_format($payment->invoice?->total_amount ?? 0, 2) }} DH)</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center text-[10px] font-bold text-blue-600 border border-blue-100">
+                                    {{ strtoupper(substr($payment->collector?->name ?? '?', 0, 1)) }}
+                                </div>
+                                <span class="text-sm font-medium text-zinc-700">{{ $payment->collector?->name ?? '—' }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-600 text-xs font-bold">
+                                <i data-lucide="check" class="w-3 h-3"></i>
+                                {{ number_format($payment->amount_paid, 2) }} DH
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-xs font-semibold text-zinc-500">
+                            {{ \Carbon\Carbon::parse($payment->payment_date)->format('M d, Y') }}
+                        </td>
+                        <td class="px-6 py-4 {{ $isRtl ? 'text-left' : 'text-right' }}">
+                            <a href="{{ route('payments.show', $payment->id) }}" class="p-2 rounded-lg text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all inline-block" title="{{ __('View Details') }}">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-16 text-center">
+                            <i data-lucide="banknote" class="w-12 h-12 text-zinc-200 mx-auto mb-4"></i>
+                            <h4 class="text-zinc-900 font-bold">{{ __('No payments recorded') }}</h4>
+                            <p class="text-zinc-500 text-xs mt-1">{{ __('Transaction history will appear here once payments are collected.') }}</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        @if($payments->hasPages())
+        <div class="px-6 py-4 bg-zinc-50/50 border-t border-zinc-100">
+            {{ $payments->links() }}
+        </div>
+        @endif
+    </div>
+</div>
+@endsection

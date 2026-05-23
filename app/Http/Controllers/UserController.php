@@ -4,21 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
+use App\Services\ListingQueryService;
 use App\Services\UpdateProfileService;
+use Illuminate\Http\Request;
 
 class UserController
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = User::with('villager');
 
-        $users = User::with('villager')->paginate(10);
+        ListingQueryService::apply($query, $request, [
+            'search' => ['name', 'email', 'phone'],
+            'exact' => [
+                'role' => 'role',
+            ],
+            'date_field' => 'created_at',
+        ]);
+
+        $users = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
         return view('dashboards.users.index', compact('users'));
     }
 
 
     public function showUser(int $id)
     {
-        $user = User::with('villager')->where('id', $id)->first();
+        $user = User::with(['villager.meters.meterReadings'])->findOrFail($id);
         return view('dashboards.users.show', compact('user'));
     }
 

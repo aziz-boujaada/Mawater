@@ -1,210 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
+@php $active = 'dashboard'; @endphp
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collector Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep: '#005461',
-                        teal: '#0C7779',
-                        mid: '#249E94',
-                        light: '#3BC1A8'
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm: ['DM Sans', 'sans-serif']
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': {
-                                opacity: '0',
-                                transform: 'translateY(8px)'
-                            },
-                            '100%': {
-                                opacity: '1',
-                                transform: 'translateY(0)'
-                            },
-                        }
-                    },
-                    animation: {
-                        fadeIn: 'fadeIn 0.3s ease both'
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
+@section('title', __('Repair Agent Dashboard'))
+@section('header', __('Maintenance Overview'))
 
-<body class="font-dm bg-gray-50 text-gray-800">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div class="flex min-h-screen">
-
-        @include('components.side-bar', ['active' => 'dashboard'])
-
-        <div class="flex-1 flex flex-col lg:ml-56 min-w-0">
-
-            {{-- TOPBAR --}}
-            <header class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition">
-                    <i class="fa-solid fa-bars text-gray-600"></i>
-                </button>
-                <div class="flex-1 min-w-0">
-                    <h1 class="font-syne font-bold text-deep text-lg tracking-tight">Repair Agent Dashboard</h1>
-                    <p class="text-xs text-gray-400">Welcome back, {{ auth()->user()->name ?? 'Repair Agent' }} 👋</p>
+@section('content')
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+        <!-- Repairs -->
+        <div class="premium-card p-6">
+            <div class="flex items-start justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center">
+                    <i data-lucide="wrench" class="text-indigo-600 w-6 h-6"></i>
                 </div>
-                <button class="relative p-2 rounded-xl hover:bg-gray-100 transition">
-                    <i class="fa-solid fa-bell text-gray-500"></i>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-light border-2 border-white"></span>
-                </button>
-            </header>
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg">{{ __('Repairs') }}</span>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-zinc-500 text-sm font-medium">{{ __('Total Repairs') }}</h3>
+                <p class="text-3xl font-syne font-bold text-zinc-900 mt-1">{{ $repairsCount }}</p>
+            </div>
+        </div>
 
-            <main class="flex-1 p-6 space-y-6">
-
-                {{-- STAT CARDS --}}
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-
-                    <!-- Total Repairs -->
-                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-teal/10 flex items-center justify-center">
-                                <i class="fa-solid fa-screwdriver-wrench text-teal"></i>
-                            </div>
-                            <span class="text-xs font-semibold text-teal bg-teal/10 px-2 py-0.5 rounded-full">Repairs</span>
-                        </div>
-                        <p class="text-2xl font-syne font-bold text-deep">{{ $repairsCount }}</p>
-                        <p class="text-xs text-gray-400 mt-0.5">Total Repairs</p>
-                    </div>
-
-                    <!-- Total Loss Cost -->
-                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-                                <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
-                            </div>
-                            <span class="text-xs font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Loss Cost</span>
-                        </div>
-                        <p class="text-2xl font-syne font-bold text-deep">{{ $repairsAmountLose }} DH</p>
-                        <p class="text-xs text-gray-400 mt-0.5">Total Losses</p>
-                    </div>
-
-                    <!-- Average Repair Cost -->
-                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                                <i class="fa-solid fa-chart-line text-blue-600"></i>
-                            </div>
-                            <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">Average Cost</span>
-                        </div>
-                        <p class="text-2xl font-syne font-bold text-deep">{{ number_format($moyenCost ,2)}} DH</p>
-                        <p class="text-xs text-gray-400 mt-0.5">Repairs Average</p>
-                    </div>
-
-                    <!-- Completion Rate -->
-                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-green-100 flex items-center justify-center shadow-sm">
-                                <i class="fa-solid fa-circle-check text-green-600 text-lg"></i>
-                            </div>
-                            <span class="text-xs font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full">
-                                Completion Rate
-                            </span>
-                        </div>
-
-                        <!-- Percentage -->
-                        <div class="mb-3">
-                            <p class="text-3xl font-syne font-bold text-deep leading-none">
-                                {{ number_format($completionRate, 2) }}%
-                            </p>
-                            <p class="text-xs text-gray-400 mt-1">Repair success overview</p>
-                        </div>
-
-                        <!-- Progress Bar -->
-                        <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden mb-4">
-                            <div
-                                class="bg-green-500 h-2.5 rounded-full transition-all duration-700"
-                                style="width: {{ $completionRate }}%">
-                            </div>
-                        </div>
-
-                        <!-- Stats -->
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="rounded-xl bg-green-50 px-3 py-2">
-                                <p class="text-xs text-gray-500">Repaired</p>
-                                <p class="text-sm font-bold text-green-600">{{ $completedRepairs }}</p>
-                            </div>
-
-                            <div class="rounded-xl bg-red-50 px-3 py-2">
-                                <p class="text-xs text-gray-500">In Progress</p>
-                                <p class="text-sm font-bold text-red-500">{{ $inProgressRepairs }}</p>
-                            </div>
-                        </div>
-                    </div>
-
+        <!-- Loss Cost -->
+        <div class="premium-card p-6">
+            <div class="flex items-start justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center">
+                    <i data-lucide="alert-triangle" class="text-rose-600 w-6 h-6"></i>
                 </div>
-
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 max-w-md mr-auto">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="font-syne text-lg font-bold text-deep">Repair Status Overview</h2>
-                        <i class="fa-solid fa-chart-pie text-green-500"></i>
-                    </div>
-
-                    <div style="position: relative; height: 200px; width: 100%;">
-                        <canvas id="repairChart"></canvas>
-                    </div>
+                <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-1 rounded-lg">{{ __('Loss Cost') }}</span>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-zinc-500 text-sm font-medium">{{ __('Total Losses') }}</h3>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-3xl font-syne font-bold text-zinc-900 mt-1">{{ number_format($repairsAmountLose, 0) }}</p>
+                    <span class="text-sm font-bold text-zinc-400">DH</span>
                 </div>
+            </div>
+        </div>
 
-            </main>
+        <!-- Average Cost -->
+        <div class="premium-card p-6">
+            <div class="flex items-start justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center">
+                    <i data-lucide="bar-chart-2" class="text-blue-600 w-6 h-6"></i>
+                </div>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">{{ __('Average') }}</span>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-zinc-500 text-sm font-medium">{{ __('Average Repair Cost') }}</h3>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-3xl font-syne font-bold text-zinc-900 mt-1">{{ number_format($moyenCost, 0) }}</p>
+                    <span class="text-sm font-bold text-zinc-400">DH</span>
+                </div>
+            </div>
+        </div>
 
-            <footer class="px-6 py-4 border-t border-gray-100 text-xs text-gray-400 text-center">
-                MeterPro &copy; {{ date('Y') }} — Water Meter Management System
-            </footer>
+        <!-- Completion Rate -->
+        <div class="premium-card p-6">
+            <div class="flex items-start justify-between">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
+                    <i data-lucide="check-circle" class="text-emerald-600 w-6 h-6"></i>
+                </div>
+                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">{{ __('Success') }}</span>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-zinc-500 text-sm font-medium">{{ __('Completion Rate') }}</h3>
+                <p class="text-3xl font-syne font-bold text-emerald-600 mt-1">{{ number_format($completionRate, 1) }}%</p>
+                <div class="mt-2 h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                    <div class="bg-emerald-500 h-full" style="width: {{ $completionRate }}%"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        function toggleSidebar() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('sidebar-overlay');
-            sb.classList.toggle('-translate-x-full');
-            ov.classList.toggle('hidden');
-        }
-        const ctx = document.getElementById('repairChart');
+    <!-- Analytics Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Status Chart -->
+        <div class="premium-card p-6 flex flex-col items-center justify-center text-center">
+            <h3 class="font-syne font-bold text-zinc-900 mb-6 w-full text-left">{{ __('Status Distribution') }}</h3>
+            <div class="relative w-48 h-48 mb-6">
+                <canvas id="repairChart"></canvas>
+            </div>
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
+                    <p class="text-[10px] font-bold text-emerald-600 uppercase">{{ __('Repaired') }}</p>
+                    <p class="text-lg font-bold text-emerald-700">{{ $completedRepairs }}</p>
+                </div>
+                <div class="p-3 rounded-2xl bg-rose-50 border border-rose-100">
+                    <p class="text-[10px] font-bold text-rose-600 uppercase">{{ __('In Progress') }}</p>
+                    <p class="text-lg font-bold text-rose-700">{{ $inProgressRepairs }}</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- Recent Activity / Placeholder -->
+        <div class="lg:col-span-2 premium-card">
+            <div class="p-6 border-b border-zinc-100 bg-zinc-50/50 flex justify-between items-center">
+                <h3 class="font-syne font-bold text-zinc-900">{{ __('Recent Assignments') }}</h3>
+                <a href="{{ route('repairs') }}" class="text-xs font-bold text-emerald-600 hover:underline">{{ __('View All') }}</a>
+            </div>
+            <div class="p-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="clipboard-list" class="w-8 h-8 text-zinc-300"></i>
+                </div>
+                <h4 class="text-zinc-900 font-bold">{{ __('No active assignments') }}</h4>
+                <p class="text-zinc-500 text-sm mt-1">{{ __("You're all caught up! New repair requests will appear here.") }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('repairChart');
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Repaired', 'In Progress'],
+                labels: ['{{ __('Repaired') }}', '{{ __('In Progress') }}'],
                 datasets: [{
-                    data: [{{$completedRepairs}}, {{$inProgressRepairs}}],
-                    backgroundColor: ['#22c55e', '#ef4444'],
+                    data: [{{ $completedRepairs }}, {{ $inProgressRepairs }}],
+                    backgroundColor: ['#10b981', '#f43f5e'],
                     borderWidth: 0,
-                    borderRadius: 6
+                    borderRadius: 4
                 }]
             },
             options: {
-                cutout: '20%',
+                cutout: '75%',
                 plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15
-                        }
-                    }
+                    legend: { display: false }
                 },
                 responsive: true,
                 maintainAspectRatio: false
             }
         });
-    </script>
-</body>
-
-</html>
+    });
+</script>
+@endpush
+@endsection

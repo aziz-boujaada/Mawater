@@ -1,187 +1,118 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8" />
-    <title>Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        deep:  '#005461',
-                        teal:  '#0C7779',
-                        mid:   '#249E94',
-                        light: '#3BC1A8',
-                    },
-                    fontFamily: {
-                        syne: ['Syne', 'sans-serif'],
-                        dm:   ['DM Sans', 'sans-serif'],
-                    },
-                    keyframes: {
-                        slideUp: {
-                            '0%':   { opacity: '0', transform: 'translateY(28px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    },
-                    animation: {
-                        slideUp: 'slideUp 0.5s cubic-bezier(0.22,1,0.36,1) both',
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ __('Login') }} - MeterPro</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-dm bg-deep min-h-screen flex items-center justify-center px-4 py-10">
-
-<div class="animate-slideUp w-full max-w-3xl flex rounded-3xl shadow-2xl overflow-hidden">
-
-    {{-- WELCOME ASIDE --}}
-    <aside class="hidden lg:flex flex-col justify-between w-72 shrink-0 bg-gradient-to-br from-teal via-[#0e8a8c] to-mid p-10 relative overflow-hidden">
-
-        <div class="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-white/5"></div>
-        <div class="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-white/5"></div>
-
-        {{-- Top --}}
-        <div class="relative z-10">
-            <div class="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center mb-8">
-                <i class="fa-solid fa-gauge text-white text-xl"></i>
-            </div>
-            <h1 class="font-syne font-extrabold text-white text-3xl leading-tight mb-3">
-                Welcome<br>Back
-            </h1>
-            <p class="text-white/60 text-sm leading-relaxed">
-                Sign in to manage meters, villagers, and water usage reports.
-            </p>
-        </div>
-
-        {{-- Features --}}
-        <div class="relative z-10 space-y-4 my-8">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-dial text-white text-xs"></i>
-                </div>
-                <p class="text-white/80 text-sm">Real-time meter monitoring</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-users text-white text-xs"></i>
-                </div>
-                <p class="text-white/80 text-sm">Manage villagers & accounts</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-file-lines text-white text-xs"></i>
-                </div>
-                <p class="text-white/80 text-sm">Automated billing & reports</p>
-            </div>
-        </div>
-
-        {{-- Bottom CTA --}}
-        <div class="relative z-10">
-            <p class="text-white/50 text-xs mb-2">Don't have an account?</p>
-            <a href="{{ route('register') ?? '#' }}"
-               class="inline-flex items-center gap-2 text-white text-sm font-semibold border border-white/25 px-4 py-2 rounded-xl hover:bg-white/10 transition-colors">
-                <i class="fa-solid fa-user-plus text-xs"></i>
-                Register
-            </a>
-        </div>
-    </aside>
-
-    {{-- FORM CARD --}}
-    <div class="flex-1 bg-white p-10 relative overflow-hidden">
-
-        {{-- Top accent bar --}}
-        <div class="absolute top-0 left-8 right-8 h-[3px] bg-gradient-to-r from-teal to-light rounded-b-md"></div>
-
-        {{-- Icon --}}
-        <div class="mx-auto mb-4 w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-teal to-light shadow-lg shadow-light/30">
-            <i class="fa-solid fa-right-to-bracket text-white text-xl"></i>
-        </div>
-
-        <h2 class="font-syne font-extrabold text-2xl text-deep text-center tracking-tight mb-1">Sign In</h2>
-        <p class="text-center text-sm text-teal/60 mb-8">Enter your credentials to access the dashboard</p>
-
-        <form action="{{route('login.store')}}" method="post" class="space-y-4">
-            @csrf
-
-            <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Email"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-            <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                class="w-full bg-[#f4fafa] border border-[#d4e8ec] rounded-xl px-4 py-3 text-[0.95rem] text-deep outline-none placeholder-[#9dbec7] focus:border-mid focus:bg-white focus:ring-2 focus:ring-light/25 transition" />
-
-            <div id="message" class="text-center text-sm font-medium min-h-[1.25rem]"></div>
-
-            <button
-                type="submit"
-                id="login_btn"
-                class="w-full bg-gradient-to-r from-teal to-light text-white font-syne font-bold text-base py-3.5 rounded-xl shadow-lg shadow-light/30 hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105 active:translate-y-0 transition-all duration-150 tracking-wide">
-                Login
-            </button>
-
-            @if ($errors->any())
-            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-                <ul class="space-y-1">
-                    @foreach ($errors->all() as $error)
-                    <li class="text-red-600 text-sm">— {{ $error }}</li>
-                    @endforeach
-                </ul>
-             </div>
-            @endif
-
-        </form>
+<body class="font-sans bg-zinc-950 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    
+    <!-- Background Accents -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[60%] bg-emerald-500/10 blur-[120px] rounded-full"></div>
+        <div class="absolute -bottom-[20%] -right-[10%] w-[50%] h-[60%] bg-emerald-600/10 blur-[120px] rounded-full"></div>
     </div>
 
-</div>
+    <div class="w-full max-w-[440px] animate-in fade-in zoom-in-95 duration-500">
+        
+        <!-- Logo Area -->
+        <div class="flex flex-col items-center mb-8">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/20 mb-4">
+                <i data-lucide="droplets" class="text-white w-8 h-8"></i>
+            </div>
+            <h1 class="font-syne font-extrabold text-white text-3xl tracking-tight">MeterPro</h1>
+            <p class="text-zinc-500 text-sm mt-2">{{ __('Smart utility management system') }}</p>
+        </div>
 
-<!-- <script>
-    const registerBtn = document
-        .getElementById("login_btn")
-        .addEventListener("click", CollectUserData);
+        <!-- Login Card -->
+        <div class="bg-zinc-900 border border-white/5 rounded-[32px] p-8 md:p-10 shadow-2xl">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-white tracking-tight">{{ __('Welcome back') }}</h2>
+                <p class="text-zinc-500 text-sm mt-1">{{ __('Please enter your details to sign in.') }}</p>
+            </div>
 
-    function CollectUserData() {
-        const userData = {
-            email: document.getElementById("email").value.trim(),
-            password: document.getElementById("password").value.trim(),
-        };
-        login(userData);
-    }
+            <form action="{{ route('login.store') }}" method="POST" class="space-y-5">
+                @csrf
 
-    async function login(userData) {
-        const response = await fetch("http://127.0.0.1:8000/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-            body: JSON.stringify(userData),
-        });
+                <div class="space-y-2">
+                    <label for="email" class="text-xs font-bold text-zinc-400 uppercase tracking-widest {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Email Address') }}</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'right-0 pr-4' : 'left-0 pl-4' }} flex items-center pointer-events-none text-zinc-500 group-focus-within:text-emerald-500 transition-colors">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </div>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            required
+                            placeholder="{{ __('Enter your email address') }}"
+                            class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl {{ app()->getLocale() === 'ar' ? 'pr-11 pl-4' : 'pl-11 pr-4' }} py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600" />
+                    </div>
+                </div>
 
-        const messageBox = document.getElementById("message");
-        messageBox.classList.remove("text-red-600", "text-green-600");
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center px-1">
+                        <label for="password" class="text-xs font-bold text-zinc-400 uppercase tracking-widest">{{ __('Password') }}</label>
+                        <a href="#" class="text-[11px] font-bold text-emerald-500 hover:text-emerald-400 transition-colors">{{ __('Forgot password?') }}</a>
+                    </div>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'right-0 pr-4' : 'left-0 pl-4' }} flex items-center pointer-events-none text-zinc-500 group-focus-within:text-emerald-500 transition-colors">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                        </div>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            required
+                            placeholder="{{ __('Enter your password') }}"
+                            class="w-full bg-zinc-800/50 border border-white/5 rounded-2xl {{ app()->getLocale() === 'ar' ? 'pr-11 pl-4' : 'pl-11 pr-4' }} py-3.5 text-white outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder-zinc-600" />
+                    </div>
+                </div>
 
-        const result = await response.json();
+                @if ($errors->any())
+                <div class="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 animate-in slide-in-from-top-2">
+                    <ul class="space-y-1">
+                        @foreach ($errors->all() as $error)
+                        <li class="text-rose-400 text-xs font-medium flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                            {{ $error }}
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
 
-        if (response.ok) {
-            messageBox.innerText = result.message;
-            messageBox.classList.add("text-green-600");
-        } else {
-            messageBox.innerText = result.message || "Registration failed";
-            messageBox.classList.add("text-red-600");
-        }
-    }
-</script> -->
+                <button
+                    type="submit"
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-syne font-bold py-4 rounded-2xl shadow-xl shadow-emerald-600/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 tracking-wide mt-2">
+                    {{ __('Sign In') }}
+                </button>
+            </form>
+
+            <div class="mt-8 pt-8 border-t border-white/5 text-center text-sm text-zinc-500">
+                {{ __("Don't have an account?") }}
+                <a href="{{ route('register') }}" class="font-bold text-white hover:text-emerald-500 transition-colors {{ app()->getLocale() === 'ar' ? 'mr-1' : 'ml-1' }}">{{ __('Register now') }}</a>
+            </div>
+        </div>
+
+        <p class="text-center text-zinc-600 text-[11px] mt-8 font-medium">
+            &copy; {{ date('Y') }} MeterPro. {{ __('All rights reserved.') }}
+        </p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
